@@ -52,9 +52,22 @@ class DeepfakeDetector:
             logger.info(f"Loading pretrained model '{self.model_id}' on device '{self.device}'...")
             from transformers import AutoImageProcessor, AutoModelForImageClassification
 
-            # Load processor and model
-            self._processor = AutoImageProcessor.from_pretrained(self.model_id)
-            self._model = AutoModelForImageClassification.from_pretrained(self.model_id)
+            # Check local files first to prevent unconfigured automatic large downloads
+            try:
+                self._processor = AutoImageProcessor.from_pretrained(self.model_id, local_files_only=True)
+                self._model = AutoModelForImageClassification.from_pretrained(self.model_id, local_files_only=True)
+            except Exception:
+                if getattr(settings, "AUTO_DOWNLOAD_MODELS", False):
+                    self._processor = AutoImageProcessor.from_pretrained(self.model_id)
+                    self._model = AutoModelForImageClassification.from_pretrained(self.model_id)
+                else:
+                    logger.warning(
+                        f"Pretrained model '{self.model_id}' weights not cached locally. "
+                        "Skipping automatic remote download (AUTO_DOWNLOAD_MODELS=False). "
+                        "The system will run in unassessed mode unless model weights are cached."
+                    )
+                    self._is_loaded = False
+                    return False
             
             # Verify class labels
             id2label = getattr(self._model.config, "id2label", {0: "Real", 1: "Fake"})

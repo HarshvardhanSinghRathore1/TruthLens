@@ -31,7 +31,7 @@ export const VideoDropzone: React.FC<VideoDropzoneProps> = ({ onFileSelect, disa
     const ext = '.' + file.name.split('.').pop()?.toLowerCase();
     if (!APP_CONFIG.allowedExtensions.includes(ext)) {
       setValidationError(
-        `Unsupported video format (${ext}). Supported: ${APP_CONFIG.allowedExtensions.join(', ')}`
+        `Unsupported video format (${ext}). Supported formats: ${APP_CONFIG.allowedExtensions.join(', ')}`
       );
       return;
     }
@@ -80,12 +80,12 @@ export const VideoDropzone: React.FC<VideoDropzoneProps> = ({ onFileSelect, disa
             fileInputRef.current?.click();
           }
         }}
-        className={`forensic-card p-8 sm:p-12 text-center cursor-pointer border-2 border-dashed transition-all outline-none focus-visible:ring-2 focus-visible:ring-accent-cyan ${
+        className={`p-8 sm:p-12 text-center cursor-pointer border-2 border-dashed rounded-xl transition-all outline-none focus-visible:ring-2 focus-visible:ring-primary ${
           disabled
-            ? 'opacity-50 cursor-not-allowed border-forensic-border'
+            ? 'opacity-50 cursor-not-allowed bg-background-secondary border-odoo-border'
             : isDragOver
-            ? 'border-accent-cyan bg-accent-cyan/10 shadow-glow-cyan'
-            : 'border-forensic-border hover:border-accent-cyan/60 hover:bg-background-secondary/50'
+            ? 'border-primary bg-primary-surface/70 shadow-odoo-sm'
+            : 'border-odoo-border bg-white hover:border-primary/50 hover:bg-primary-surface/20 shadow-odoo-xs'
         }`}
       >
         <input
@@ -98,27 +98,27 @@ export const VideoDropzone: React.FC<VideoDropzoneProps> = ({ onFileSelect, disa
         />
 
         <div className="max-w-md mx-auto space-y-4">
-          <div className="w-16 h-16 mx-auto rounded-2xl bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan shadow-glow-cyan">
+          <div className="w-16 h-16 mx-auto rounded-2xl bg-primary-surface border border-primary/20 flex items-center justify-center text-primary shadow-xs">
             <UploadCloud className="w-8 h-8" />
           </div>
 
           <div className="space-y-1.5">
-            <p className="text-base sm:text-lg font-bold text-forensic-text">
-              Drop target video here, or <span className="text-accent-cyan underline">browse</span>
+            <p className="text-base sm:text-lg font-semibold text-odoo-text">
+              Drop media file here, or <span className="text-primary underline font-bold">browse</span>
             </p>
-            <p className="text-xs text-forensic-muted leading-relaxed">
+            <p className="text-xs text-odoo-muted leading-relaxed">
               Supports {APP_CONFIG.allowedExtensions.join(', ')} &bull; Up to {APP_CONFIG.maxFileSizeMB}MB
             </p>
           </div>
 
           {/* Dual-Modality Notice */}
-          <div className="inline-flex flex-wrap items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-background-secondary/80 border border-forensic-border text-[11px] text-forensic-muted">
-            <span className="flex items-center space-x-1 text-forensic-text font-medium">
-              <Video className="w-3.5 h-3.5 text-accent-cyan" />
+          <div className="inline-flex flex-wrap items-center justify-center gap-2 px-3 py-1.5 rounded-lg bg-background-secondary border border-odoo-border text-[11px] text-odoo-muted">
+            <span className="flex items-center space-x-1 text-odoo-text font-medium">
+              <Video className="w-3.5 h-3.5 text-primary" />
               <span>Facial Video Frames</span>
             </span>
-            <span>+</span>
-            <span className="flex items-center space-x-1 text-forensic-text font-medium">
+            <span className="text-odoo-muted font-bold">&bull;</span>
+            <span className="flex items-center space-x-1 text-odoo-text font-medium">
               <Mic className="w-3.5 h-3.5 text-accent-violet" />
               <span>Extracted Audio Track</span>
             </span>
@@ -128,17 +128,17 @@ export const VideoDropzone: React.FC<VideoDropzoneProps> = ({ onFileSelect, disa
             <button
               type="button"
               disabled={disabled}
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-background-card border border-forensic-border text-xs font-semibold text-forensic-text hover:bg-background-secondary hover:border-accent-cyan transition-colors"
+              className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-white border border-odoo-border text-xs font-semibold text-odoo-text hover:bg-background-secondary hover:border-primary/40 transition-colors shadow-odoo-xs"
             >
-              <FolderOpen className="w-3.5 h-3.5 text-accent-cyan" />
-              <span>Select Video File</span>
+              <FolderOpen className="w-3.5 h-3.5 text-primary" />
+              <span>Select File from Device</span>
             </button>
           </div>
         </div>
       </div>
 
       {validationError && (
-        <div className="p-3 rounded-lg bg-forensic-error/10 border border-forensic-error/30 flex items-center space-x-2 text-forensic-error text-xs animate-in fade-in">
+        <div className="p-3 rounded-lg bg-red-50 border border-red-200 flex items-center space-x-2 text-forensic-error text-xs animate-in fade-in">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{validationError}</span>
         </div>

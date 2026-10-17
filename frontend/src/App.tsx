@@ -8,6 +8,7 @@ import { AnalyzePage } from '@/pages/AnalyzePage';
 import { ResultsPage } from '@/pages/ResultsPage';
 import { HowItWorksPage } from '@/pages/HowItWorksPage';
 import { ModelInfoPage } from '@/pages/ModelInfoPage';
+import { RadarPage } from '@/pages/RadarPage';
 import { NotFoundPage } from '@/pages/NotFoundPage';
 
 export const App: React.FC = () => {
@@ -19,6 +20,8 @@ export const App: React.FC = () => {
           <main className="flex-1">
             <Routes>
               <Route path="/" element={<HomePage />} />
+              <Route path="/radar" element={<RadarPage />} />
+              <Route path="/news" element={<RadarPage />} />
               <Route path="/analyze" element={<AnalyzePage />} />
               <Route path="/results" element={<ResultsPage />} />
               <Route path="/how-it-works" element={<HowItWorksPage />} />

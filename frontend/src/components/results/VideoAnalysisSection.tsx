@@ -25,14 +25,14 @@ export const VideoAnalysisSection: React.FC<VideoAnalysisSectionProps> = ({ anal
     switch (outcome) {
       case 'potentially_manipulated':
         return (
-          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-forensic-error/15 text-forensic-error border border-forensic-error/40 font-bold text-xs tracking-wide">
+          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-red-50 text-forensic-error border border-red-200 font-bold text-xs tracking-wide">
             <ShieldAlert className="w-4 h-4 shrink-0" />
             <span>Potentially Manipulated</span>
           </div>
         );
       case 'potentially_genuine':
         return (
-          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-forensic-success/15 text-forensic-success border border-forensic-success/40 font-bold text-xs tracking-wide">
+          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-50 text-forensic-success border border-emerald-200 font-bold text-xs tracking-wide">
             <ShieldCheck className="w-4 h-4 shrink-0" />
             <span>Potentially Genuine</span>
           </div>
@@ -40,7 +40,7 @@ export const VideoAnalysisSection: React.FC<VideoAnalysisSectionProps> = ({ anal
       case 'unable_to_assess':
       default:
         return (
-          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-forensic-warning/15 text-forensic-warning border border-forensic-warning/40 font-bold text-xs tracking-wide">
+          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-amber-50 text-forensic-warning border border-amber-200 font-bold text-xs tracking-wide">
             <HelpCircle className="w-4 h-4 shrink-0" />
             <span>Unable to Assess</span>
           </div>
@@ -53,16 +53,16 @@ export const VideoAnalysisSection: React.FC<VideoAnalysisSectionProps> = ({ anal
   const riskScore = analysis.video_analysis?.risk_score ?? analysis.risk_score;
 
   return (
-    <div className="forensic-card p-6 sm:p-7 space-y-5 border-l-4 border-l-accent-cyan">
+    <div className="forensic-card p-6 sm:p-7 space-y-5 border-l-4 border-l-primary bg-white shadow-odoo-xs">
       {/* Title Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-forensic-border pb-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-odoo-border pb-4">
         <div className="flex items-center space-x-3">
-          <div className="w-9 h-9 rounded-lg bg-accent-cyan/10 border border-accent-cyan/30 flex items-center justify-center text-accent-cyan shrink-0">
+          <div className="w-9 h-9 rounded-lg bg-primary-surface border border-primary/20 flex items-center justify-center text-primary shrink-0">
             <Video className="w-5 h-5" />
           </div>
           <div>
-            <h3 className="text-base font-bold text-forensic-text">Visual & Facial Frame Forensics</h3>
-            <p className="text-xs text-forensic-muted font-mono">
+            <h3 className="text-base font-bold text-odoo-text">Visual & Facial Frame Forensics</h3>
+            <p className="text-xs text-odoo-muted font-mono">
               Detector: {modelName}
             </p>
           </div>
@@ -73,23 +73,23 @@ export const VideoAnalysisSection: React.FC<VideoAnalysisSectionProps> = ({ anal
 
       {/* Metrics Row */}
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-        <div className="p-3 rounded-lg bg-background-secondary/50 border border-forensic-border">
-          <span className="text-[11px] text-forensic-muted font-mono">Sampled Frames</span>
-          <p className="text-sm font-bold font-mono text-forensic-text mt-0.5">
+        <div className="p-3.5 rounded-lg bg-background-secondary border border-odoo-border">
+          <span className="text-[11px] text-odoo-muted font-mono">Sampled Frames</span>
+          <p className="text-sm font-bold font-mono text-odoo-text mt-0.5">
             {framesCount} frames
           </p>
         </div>
 
-        <div className="p-3 rounded-lg bg-background-secondary/50 border border-forensic-border">
-          <span className="text-[11px] text-forensic-muted font-mono">Visual Anomaly Index</span>
-          <p className="text-sm font-bold font-mono text-accent-cyan mt-0.5">
+        <div className="p-3.5 rounded-lg bg-background-secondary border border-odoo-border">
+          <span className="text-[11px] text-odoo-muted font-mono">Visual Anomaly Index</span>
+          <p className="text-sm font-bold font-mono text-primary mt-0.5">
             {riskScore !== null && riskScore !== undefined ? `${(riskScore * 100).toFixed(1)}%` : 'Pending weights'}
           </p>
         </div>
 
-        <div className="col-span-2 sm:col-span-1 p-3 rounded-lg bg-background-secondary/50 border border-forensic-border">
-          <span className="text-[11px] text-forensic-muted font-mono">Facial Boundaries</span>
-          <p className="text-sm font-bold font-mono text-forensic-text mt-0.5">
+        <div className="col-span-2 sm:col-span-1 p-3.5 rounded-lg bg-background-secondary border border-odoo-border">
+          <span className="text-[11px] text-odoo-muted font-mono">Facial Boundaries</span>
+          <p className="text-sm font-bold font-mono text-odoo-text mt-0.5">
             {analysis.frame_results?.reduce((acc, f) => acc + (f.faces_detected || 0), 0) ?? 0} localized
           </p>
         </div>
@@ -97,13 +97,13 @@ export const VideoAnalysisSection: React.FC<VideoAnalysisSectionProps> = ({ anal
 
       {/* Observations */}
       <div className="space-y-2">
-        <h4 className="text-xs font-semibold uppercase tracking-wider font-mono text-forensic-muted">
+        <h4 className="text-xs font-semibold uppercase tracking-wider font-mono text-odoo-muted">
           Visual Evidence & Findings
         </h4>
-        <ul className="space-y-1.5 text-xs text-forensic-text/90">
+        <ul className="space-y-1.5 text-xs text-odoo-text">
           {(analysis.video_analysis?.findings ?? analysis.findings).slice(0, 3).map((f, i) => (
-            <li key={i} className="flex items-start space-x-2 bg-background-secondary/30 p-2.5 rounded-md border border-forensic-border/50">
-              <CheckCircle2 className="w-3.5 h-3.5 text-accent-cyan shrink-0 mt-0.5" />
+            <li key={i} className="flex items-start space-x-2 bg-background-secondary p-2.5 rounded-md border border-odoo-border">
+              <CheckCircle2 className="w-3.5 h-3.5 text-primary shrink-0 mt-0.5" />
               <span>{f}</span>
             </li>
           ))}
@@ -111,7 +111,7 @@ export const VideoAnalysisSection: React.FC<VideoAnalysisSectionProps> = ({ anal
       </div>
 
       {/* Video Limitations */}
-      <div className="p-3 rounded-lg bg-background-secondary/30 border border-forensic-border/60 text-xs text-forensic-muted flex items-start space-x-2">
+      <div className="p-3.5 rounded-lg bg-amber-50/60 border border-amber-200 text-xs text-odoo-muted flex items-start space-x-2">
         <AlertTriangle className="w-4 h-4 text-forensic-warning shrink-0 mt-0.5" />
         <span className="text-[11px] leading-relaxed">
           Heavy H.264/H.265 compression artifacts, dynamic motion blur, and non-frontal angles reduce detection reliability.

@@ -39,11 +39,18 @@ class Settings(BaseSettings):
     DEVICE: str = "cpu"
     HIGH_RISK_THRESHOLD: float = 0.65
     LOW_RISK_THRESHOLD: float = 0.40
+    AUTO_DOWNLOAD_MODELS: bool = False
 
     # Database Settings (Optional)
     MONGODB_URI: str = ""
     MONGODB_DB_NAME: str = "truthlens"
     ENABLE_DB: bool = False
+
+    # Deepfake Radar / News Settings
+    NEWS_CACHE_TTL_MINUTES: int = 30
+    NEWS_API_KEY: str = ""
+    GNEWS_API_KEY: str = ""
+    NEWS_REFRESH_COOLDOWN_SEC: int = 30
 
     model_config = SettingsConfigDict(
         env_file=".env",

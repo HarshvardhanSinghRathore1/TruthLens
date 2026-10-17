@@ -1,5 +1,11 @@
 import axios, { AxiosInstance } from 'axios';
 import { AnalysisResponse, HealthResponse } from '@/types/analysis';
+import {
+  NewsResponse,
+  NewsStatusResponse,
+  NewsStory,
+  NewsQueryParams,
+} from '@/types/news';
 
 const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api';
 
@@ -58,4 +64,48 @@ export const apiService = {
     const response = await apiClient.get<AnalysisResponse>(`/analyses/${analysisId}`);
     return response.data;
   },
+
+  /**
+   * Retrieve filtered and paginated Deepfake Radar news stories.
+   */
+  async getNews(params: NewsQueryParams = {}): Promise<NewsResponse> {
+    const response = await apiClient.get<NewsResponse>('/news', { params });
+    return response.data;
+  },
+
+  /**
+   * Query status and health of the news discovery engine.
+   */
+  async getNewsStatus(): Promise<NewsStatusResponse> {
+    const response = await apiClient.get<NewsStatusResponse>('/news/status');
+    return response.data;
+  },
+
+  /**
+   * Trigger controlled manual refresh of the news feeds.
+   */
+  async refreshNews(force: boolean = false): Promise<{ status: string; message: string; total_stories: number }> {
+    const response = await apiClient.post('/news/refresh', null, { params: { force } });
+    return response.data;
+  },
+
+  /**
+   * Fetch details for a specific story by its ID.
+   */
+  async getNewsStory(storyId: string): Promise<NewsStory> {
+    const response = await apiClient.get<NewsStory>(`/news/${storyId}`);
+    return response.data;
+  },
+
+  /**
+   * Submit a remote video URL linked to a news story for forensic analysis.
+   */
+  async analyzeRemoteVideo(videoUrl: string, newsId?: string): Promise<AnalysisResponse> {
+    const response = await apiClient.post<AnalysisResponse>('/news/analyze-url', {
+      video_url: videoUrl,
+      news_id: newsId,
+    });
+    return response.data;
+  },
 };
+

@@ -2,13 +2,14 @@
 
 > **See Beyond the Fake.**
 
-TruthLens AI is an AI-powered digital media forensics platform developed for the **Cyber Samvad Hackathon 2026**. It allows users to upload videos, extract facial frames, run them through deepfake detection models, and view an interpretable forensics report detailing findings, risk indicators, and methodological limitations.
+TruthLens AI is an AI-powered digital media forensics platform. It allows users to upload videos, extract facial frames, run them through deepfake detection models, monitor live deepfake news via Deepfake Radar, and view an interpretable forensics report detailing findings, risk indicators, and methodological limitations.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Quick Start (One Command)](#quick-start-one-command)
 - [Key Features](#key-features)
 - [Architecture & Tech Stack](#architecture--tech-stack)
 - [Repository Structure](#repository-structure)
@@ -144,6 +145,33 @@ TruthLens/
 ├── .gitignore
 ├── LICENSE
 └── README.md
+```
+
+---
+
+## Quick Start (One Command)
+
+The easiest way to start both the backend and frontend on Windows with automatic dependency checking, port detection, and browser launch:
+
+```powershell
+# In PowerShell (root directory):
+.\run.ps1
+```
+
+If your PowerShell execution policy is restricted, run:
+```powershell
+powershell -ExecutionPolicy Bypass -File .\run.ps1
+```
+Or simply double-click / run:
+```cmd
+.\run.bat
+```
+
+To stop all running TruthLens AI processes:
+```powershell
+.\stop.ps1
+# or
+.\stop.bat
 ```
 
 ---
