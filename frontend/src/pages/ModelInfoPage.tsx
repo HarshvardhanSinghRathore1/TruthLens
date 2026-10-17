@@ -1,5 +1,5 @@
 import React from 'react';
-import { Cpu, Video, Mic, ShieldAlert, Sparkles, CheckCircle2, AlertTriangle, Layers } from 'lucide-react';
+import { Cpu, Video, Mic, ShieldAlert, Sparkles } from 'lucide-react';
 
 export const ModelInfoPage: React.FC = () => {
   return (

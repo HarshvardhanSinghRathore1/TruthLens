@@ -15,7 +15,7 @@ export const App: React.FC = () => {
   return (
     <ThemeProvider>
       <Router>
-        <div className="flex flex-col min-h-screen bg-background text-forensic-text transition-colors duration-200">
+        <div className="flex flex-col min-h-screen bg-background-secondary text-odoo-text transition-colors duration-200">
           <Navbar />
           <main className="flex-1">
             <Routes>
