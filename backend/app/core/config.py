@@ -49,8 +49,8 @@ class Settings(BaseSettings):
     AUDIO_SAMPLE_RATE: int = 16000
     AUDIO_SEGMENT_DURATION_SEC: float = 5.0
     AUDIO_MAX_DURATION_SEC: float = 60.0
-    AUDIO_HIGH_RISK_THRESHOLD: float = 0.65
-    AUDIO_LOW_RISK_THRESHOLD: float = 0.40
+    AUDIO_HIGH_RISK_THRESHOLD: float = 0.50
+    AUDIO_LOW_RISK_THRESHOLD: float = 0.25
 
     # Database Settings (Optional)
     MONGODB_URI: str = ""

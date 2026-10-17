@@ -38,13 +38,13 @@ export const RiskIndicator: React.FC<RiskIndicatorProps> = ({
   let tierSurface = 'bg-emerald-50';
   let tierLabel = 'Low Anomaly';
 
-  if (score >= 0.65) {
+  if (score >= 0.50) {
     tierColor = 'text-forensic-error';
     tierBg = 'bg-forensic-error';
     tierBorder = 'border-red-200';
     tierSurface = 'bg-red-50';
     tierLabel = 'Elevated Risk';
-  } else if (score >= 0.35) {
+  } else if (score >= 0.25) {
     tierColor = 'text-forensic-warning';
     tierBg = 'bg-forensic-warning';
     tierBorder = 'border-amber-200';

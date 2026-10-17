@@ -191,19 +191,19 @@ class ReportGenerator:
         high_risk_count = sum(1 for s in valid_scores if s >= self.high_threshold)
 
         # In forensic screening, a video exhibits manipulation if aggregate risk is high,
-        # or multiple sampled keyframes cross the model's manipulation threshold.
-        is_manipulated = (
+        # or sampled keyframes cross the model's manipulation threshold.
+        is_video_manipulated = (
             aggregate_risk >= self.high_threshold or
             top_k_mean >= self.high_threshold or
-            high_risk_count >= 2
+            high_risk_count >= 1 or
+            peak_score >= 0.50
         )
-        is_genuine = (
+        is_video_genuine = (
             aggregate_risk <= self.low_threshold and
-            peak_score < (self.high_threshold - 0.10)
+            peak_score < (self.low_threshold + 0.15)
         )
 
-        if is_manipulated:
-            outcome = DetectionOutcome.POTENTIAL_MANIPULATION_DETECTED
+        if is_video_manipulated:
             video_outcome = VideoOutcome.POTENTIALLY_MANIPULATED
             aggregate_risk = max(aggregate_risk, round(top_k_mean, 4))
             video_summary = (
@@ -211,36 +211,34 @@ class ReportGenerator:
                 f"or face swapping were identified across sampled keyframes (peak anomaly score: {peak_score:.2f}, "
                 f"keyframe risk: {top_k_mean:.2f})."
             )
-            score_explanation = (
-                f"Risk score {aggregate_risk:.2f} reflects elevated facial manipulation indicators, "
+            video_score_expl = (
+                f"Visual risk score {aggregate_risk:.2f} reflects elevated facial manipulation indicators, "
                 f"with peak anomaly ({peak_score:.2f}) observed near {peak_ts:.1f}s and {high_risk_count} frames "
                 f"exceeding the detection threshold ({self.high_threshold:.2f})."
             )
-        elif is_genuine:
-            outcome = DetectionOutcome.NO_STRONG_SIGNS_DETECTED
+        elif is_video_genuine:
             video_outcome = VideoOutcome.POTENTIALLY_GENUINE
             video_summary = (
                 f"No strong signs of facial manipulation detected. Sampled facial textures and boundary "
-                f"transitions appear consistent with authentic camera captures (aggregate risk score: {aggregate_risk:.2f})."
+                f"transitions appear consistent with authentic camera captures (aggregate visual risk score: {aggregate_risk:.2f})."
             )
-            score_explanation = (
-                f"Heuristic risk score {aggregate_risk:.2f} reflects low anomaly indices across "
+            video_score_expl = (
+                f"Visual risk score {aggregate_risk:.2f} reflects low anomaly indices across "
                 f"{len(valid_scores)} evaluated facial regions."
             )
         else:
-            outcome = DetectionOutcome.UNABLE_TO_ASSESS
             video_outcome = VideoOutcome.UNABLE_TO_ASSESS
             video_summary = (
-                f"Inconclusive video analysis. The aggregate anomaly score ({aggregate_risk:.2f}) falls in the ambiguous "
+                f"Inconclusive video analysis. The visual anomaly score ({aggregate_risk:.2f}) falls in the ambiguous "
                 f"borderline range ({self.low_threshold:.2f} - {self.high_threshold:.2f}), where localized anomalies "
                 f"or compression noise cannot be conclusively distinguished from synthetic manipulation."
             )
-            score_explanation = (
-                f"Borderline score {aggregate_risk:.2f} indicates inconclusive forensic confidence. "
-                f"Neither authenticity nor manipulation can be strongly asserted."
+            video_score_expl = (
+                f"Borderline visual score {aggregate_risk:.2f} indicates inconclusive forensic confidence. "
+                f"Neither authenticity nor manipulation can be strongly asserted from visual frames alone."
             )
 
-        # Compile granular findings
+        # Compile granular visual findings
         findings = [
             f"Analyzed {frames_analyzed} uniform frames over {duration_seconds or 0:.1f}s video duration.",
             f"Localized human faces in {len(valid_scores)} of {frames_analyzed} sampled frames.",
@@ -249,7 +247,7 @@ class ReportGenerator:
             f"Model architecture: Pretrained Deepfake Detector ({model_name})."
         ]
 
-        # Multi-modal component breakdown
+        # Multi-modal component breakdown for video
         video_component = VideoAnalysisComponent(
             status=AnalysisResultStatus.COMPLETED,
             outcome=video_outcome,
@@ -257,7 +255,7 @@ class ReportGenerator:
             frames_analyzed=frames_analyzed,
             faces_detected=total_faces_found,
             risk_score=aggregate_risk,
-            score_explanation=score_explanation,
+            score_explanation=video_score_expl,
             findings=list(findings),
             limitations=[
                 "Automated model inference provides a forensic risk estimate, not mathematical or legal proof of authenticity.",
@@ -265,15 +263,96 @@ class ReportGenerator:
             ]
         )
 
-        # Integrate audio findings if available
-        if audio_analysis and audio_analysis.has_audio:
-            if audio_analysis.status == "completed":
-                summary = f"{video_summary} Audio Analysis: {audio_analysis.score_explanation}"
-                findings.append(f"Audio Forensics ({audio_analysis.model_name}): {audio_analysis.score_explanation}")
-            else:
-                summary = f"{video_summary} (Audio stream detected but speech analysis could not be completed)."
+        # Multimodal Fusion: Synthesize visual and acoustic evidence into overall dossier verdict
+        has_valid_audio = audio_analysis and audio_analysis.has_audio and audio_analysis.status == "completed"
+        is_audio_spoofed = (
+            has_valid_audio and
+            audio_analysis.outcome == AudioOutcome.POTENTIALLY_SPOOFED_SPEECH
+        )
+        is_audio_genuine = (
+            has_valid_audio and
+            audio_analysis.outcome == AudioOutcome.POTENTIALLY_GENUINE_SPEECH
+        )
+        audio_risk = audio_analysis.risk_score if (has_valid_audio and audio_analysis.risk_score is not None) else None
+
+        if has_valid_audio:
+            findings.append(f"Audio Forensics ({audio_analysis.model_name}): {audio_analysis.score_explanation}")
+
+        # Multimodal Decision Engine
+        if is_video_manipulated and is_audio_spoofed:
+            outcome = DetectionOutcome.POTENTIAL_MANIPULATION_DETECTED
+            aggregate_risk = max(aggregate_risk, audio_risk if audio_risk is not None else aggregate_risk)
+            summary = (
+                f"Dual-Modal Deepfake Detected: Both visual facial frames (visual risk: {aggregate_risk:.2f}) "
+                f"and demuxed speech audio (acoustic spoof index: {(audio_risk or 0)*100:.1f}%) exhibit "
+                f"high-confidence synthetic manipulation signatures consistent with AI generative video and cloned speech."
+            )
+            score_explanation = (
+                f"Multimodal risk index {aggregate_risk:.2f}: Visual frames show neural facial manipulation (peak: {peak_score:.2f}) "
+                f"and the demuxed audio track exhibits neural vocoder synthesis artifacts (acoustic risk: {(audio_risk or 0)*100:.1f}%)."
+            )
+            findings.append("MULTIMODAL SYNTHESIS: High anomaly detected across both visual video frames and speech audio track.")
+
+        elif is_video_manipulated and is_audio_genuine:
+            outcome = DetectionOutcome.POTENTIAL_MANIPULATION_DETECTED
+            summary = (
+                f"Visual Facial Reenactment Deepfake Detected: Visual keyframes exhibit synthetic face-swapping or "
+                f"facial morphing artifacts (peak anomaly: {peak_score:.2f}, visual risk: {aggregate_risk:.2f}), while the audio track "
+                f"exhibits natural human vocal tract acoustics (no AI vocoder synthesis detected). This pattern is typical of a human "
+                f"voice actor or impressionist driving a manipulated facial video track (human-puppetry deepfake)."
+            )
+            score_explanation = (
+                f"Multimodal risk index {aggregate_risk:.2f}: Elevated facial boundary manipulation on video frames ({high_risk_count} frames >= threshold). "
+                f"Audio track reflects natural human vocal tract acoustics (live human impressionist)."
+            )
+            findings.append(
+                "CROSS-MODAL SIGNATURE: Video displays facial manipulation while speech audio exhibits "
+                "natural human vocal acoustics. Characteristic of human impressionist / voice actor driving a deepfake face."
+            )
+
+        elif is_audio_spoofed:
+            outcome = DetectionOutcome.POTENTIAL_MANIPULATION_DETECTED
+            aggregate_risk = audio_risk if audio_risk is not None else 0.75
+            summary = (
+                f"Synthetic Speech / Voice-Cloning Deepfake Detected: Demuxed speech audio exhibits elevated "
+                f"neural vocoder / synthetic voice cloning signatures (Acoustic Spoof Index: {(audio_risk or 0)*100:.1f}%), "
+                f"while visual facial boundaries appear consistent with camera capture. This signature is characteristic "
+                f"of an audio-dubbed deepfake or synthetic voice clone applied to video footage."
+            )
+            score_explanation = (
+                f"Multimodal risk index {aggregate_risk:.2f}: Demuxed speech track exceeds synthetic audio threshold "
+                f"({(audio_risk or 0)*100:.1f}% spoof index), indicating AI voice synthesis or voice conversion."
+            )
+            findings.append(
+                f"CROSS-MODAL SIGNATURE: Audio speech track contains AI neural vocoder artifacts (spoof index: {(audio_risk or 0)*100:.1f}%), "
+                f"flagging the media as a synthetic audio deepfake."
+            )
+
+        elif is_video_genuine and (is_audio_genuine or not has_valid_audio):
+            outcome = DetectionOutcome.NO_STRONG_SIGNS_DETECTED
+            summary = (
+                f"No strong signs of deepfake manipulation detected across visual facial structures "
+                f"(visual risk: {aggregate_risk:.2f})"
+                + (f" or acoustic speech harmonics (acoustic risk: {(audio_risk or 0)*100:.1f}%)." if has_valid_audio else ". (No audio track present).")
+                + " Sampled media exhibits characteristics consistent with authentic camera captures."
+            )
+            score_explanation = (
+                f"Multimodal risk index {aggregate_risk:.2f}: Sampled facial regions and acoustic features "
+                f"remain below deepfake anomaly thresholds."
+            )
+
         else:
-            summary = f"{video_summary} (No audio stream detected in video container)."
+            outcome = DetectionOutcome.UNABLE_TO_ASSESS
+            aggregate_risk = max(aggregate_risk, audio_risk if audio_risk is not None else 0.0)
+            summary = (
+                f"Inconclusive multimodal screening. The aggregate anomaly score ({aggregate_risk:.2f}) falls in the "
+                f"ambiguous borderline range, where localized anomalies, video compression, or acoustic background noise "
+                f"cannot be conclusively distinguished from synthetic manipulation."
+            )
+            score_explanation = (
+                f"Borderline multimodal score {aggregate_risk:.2f} indicates inconclusive forensic confidence. "
+                f"Neither authenticity nor manipulation can be strongly asserted."
+            )
 
         limitations = [
             "Automated model inference provides a forensic risk estimate, not mathematical or legal proof of authenticity.",

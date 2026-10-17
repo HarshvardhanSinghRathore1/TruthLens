@@ -1,5 +1,5 @@
 import React from 'react';
-import { Mic, VolumeX, ShieldCheck, ShieldAlert, HelpCircle, AlertTriangle, CheckCircle2 } from 'lucide-react';
+import { Mic, VolumeX, ShieldCheck, ShieldAlert, HelpCircle, AlertTriangle, CheckCircle2, Info } from 'lucide-react';
 import { AnalysisResponse, AudioOutcome } from '@/types/analysis';
 
 interface AudioAnalysisSectionProps {
@@ -28,14 +28,14 @@ export const AudioAnalysisSection: React.FC<AudioAnalysisSectionProps> = ({ anal
         return (
           <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-red-50 text-forensic-error border border-red-200 font-bold text-xs tracking-wide">
             <ShieldAlert className="w-4 h-4 shrink-0" />
-            <span>Potentially Spoofed Speech</span>
+            <span>Potential Synthetic Speech (AI Vocoder)</span>
           </div>
         );
       case 'potentially_genuine_speech':
         return (
-          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-50 text-forensic-success border border-emerald-200 font-bold text-xs tracking-wide">
+          <div className="inline-flex items-center space-x-2 px-3 py-1.5 rounded-lg bg-emerald-50 text-forensic-success border border-emerald-200 font-bold text-xs tracking-wide" title="Natural human vocal tract acoustics (no neural vocoder or TTS cloning detected)">
             <ShieldCheck className="w-4 h-4 shrink-0" />
-            <span>Potentially Genuine Speech</span>
+            <span>Natural Vocal Tract (Non-Synthetic)</span>
           </div>
         );
       case 'audio_unavailable':
@@ -133,6 +133,21 @@ export const AudioAnalysisSection: React.FC<AudioAnalysisSectionProps> = ({ anal
               )}
             </ul>
           </div>
+
+          {/* Cross-Modal Human Reenactment Callout */}
+          {analysis.result === 'potential_manipulation_detected' && audioOutcome === 'potentially_genuine_speech' && (
+            <div className="p-3.5 rounded-lg bg-primary-surface/70 border border-primary/25 text-xs text-odoo-text flex items-start space-x-2.5">
+              <Info className="w-4 h-4 text-primary shrink-0 mt-0.5" />
+              <div className="space-y-0.5">
+                <span className="font-semibold text-primary block text-[11px] uppercase tracking-wider">
+                  Cross-Modal Forensics Insight: Voice Actor / Reenactment Deepfake
+                </span>
+                <p className="text-[11px] text-odoo-muted leading-relaxed">
+                  The video track exhibits facial swap/manipulation artifacts, while the audio track exhibits natural human vocal tract harmonics rather than AI synthetic vocoders (TTS/clones). This signature is characteristic of <strong>human-puppetry or voice actor deepfakes</strong>, where a genuine human impressionist speaks live while an AI model manipulates the face.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* Audio Limitations */}
           <div className="p-3.5 rounded-lg bg-amber-50/60 border border-amber-200 text-xs text-odoo-muted flex items-start space-x-2">

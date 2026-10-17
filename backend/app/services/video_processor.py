@@ -46,9 +46,9 @@ class VideoProcessor:
         height: int,
         width: int
     ) -> Tuple[np.ndarray, Dict[str, int]]:
-        """Expands facial bounding box by padding percentage to capture hairline and blend seams."""
-        pad_x = int(w * self.padding_percent)
-        pad_y = int(h * self.padding_percent)
+        """Expands facial bounding box with tight 12% padding to match pretrained model face-alignment distribution."""
+        pad_x = int(w * 0.12)
+        pad_y = int(h * 0.12)
 
         x1 = max(0, x - pad_x)
         y1 = max(0, y - pad_y)
@@ -132,17 +132,18 @@ class VideoProcessor:
 
                 # Detect faces using Haar Cascade with multi-resolution optimization for 1080p/4K
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                max_det_dim = 640
+                eq_gray = cv2.equalizeHist(gray)
+                max_det_dim = 960
                 if width > max_det_dim or height > max_det_dim:
                     det_scale = max_det_dim / float(max(width, height))
                     det_w = int(width * det_scale)
                     det_h = int(height * det_scale)
-                    det_gray = cv2.resize(gray, (det_w, det_h), interpolation=cv2.INTER_AREA)
+                    det_gray = cv2.resize(eq_gray, (det_w, det_h), interpolation=cv2.INTER_AREA)
                     raw_faces = self.face_cascade.detectMultiScale(
                         det_gray,
-                        scaleFactor=1.15,
-                        minNeighbors=5,
-                        minSize=(max(20, int(35 * det_scale)), max(20, int(35 * det_scale)))
+                        scaleFactor=1.1,
+                        minNeighbors=4,
+                        minSize=(max(16, int(30 * det_scale)), max(16, int(30 * det_scale)))
                     )
                     detected_faces = [
                         (int(rx / det_scale), int(ry / det_scale), int(rw / det_scale), int(rh / det_scale))
@@ -150,10 +151,10 @@ class VideoProcessor:
                     ]
                 else:
                     detected_faces = self.face_cascade.detectMultiScale(
-                        gray,
-                        scaleFactor=1.15,
-                        minNeighbors=5,
-                        minSize=(50, 50)
+                        eq_gray,
+                        scaleFactor=1.1,
+                        minNeighbors=4,
+                        minSize=(24, 24)
                     )
 
                 face_crops = []

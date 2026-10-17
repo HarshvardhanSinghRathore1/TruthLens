@@ -211,10 +211,10 @@ class AudioDeepfakeDetector:
             )
         elif aggregate_spoof <= self.low_threshold:
             outcome = AudioOutcome.POTENTIALLY_GENUINE_SPEECH
-            summary_msg = f"No strong signs of speech synthesis detected; natural vocal acoustic traits observed (anomaly index: {aggregate_spoof:.2f})."
+            summary_msg = f"Acoustic liveness: Natural human vocal tract traits observed; no AI vocoder artifacts detected (anomaly index: {aggregate_spoof:.2f})."
             score_expl = (
-                f"Speech risk score {aggregate_spoof:.2f} reflects low acoustic anomaly across "
-                f"{len(segment_scores)} evaluated audio segments."
+                f"Speech anti-spoofing score {aggregate_spoof:.2f} indicates natural human vocal tract acoustics "
+                f"rather than AI neural speech synthesis across {len(segment_scores)} evaluated segments."
             )
         else:
             outcome = AudioOutcome.UNABLE_TO_ASSESS
@@ -227,12 +227,13 @@ class AudioDeepfakeDetector:
         findings = [
             f"Evaluated {duration:.1f}s extracted speech audio across {len(segment_scores)} segments.",
             f"Mean acoustic anomaly index: {mean_score:.2f}; peak segment anomaly index: {peak_score:.2f}.",
-            f"Speech anti-spoofing model: Pretrained Wav2Vec2 ({self.model_name})."
+            f"Speech anti-spoofing model: Pretrained Wav2Vec2 ({self.model_name}).",
+            "Acoustic liveness evaluates physical vocal tract resonance vs neural vocoder synthesis (TTS / voice cloning). Real human voice actors or impressionists produce natural human acoustics."
         ]
 
         limitations = [
-            "Speech anti-spoofing models detect vocoder and neural synthesis cues; background noise and compression may affect scores.",
-            "Analysis does not prove identity or verify whether the speaker committed fraud.",
+            "Speech anti-spoofing detects AI neural vocoders and synthesis cues; it does not perform biometric identity verification to prove who is speaking.",
+            "Human voice impersonators or actors speaking into a microphone produce natural human vocal tract acoustics even in manipulated videos.",
             "Short clips under 2 seconds provide limited acoustic formant context."
         ]
 
