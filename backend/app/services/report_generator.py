@@ -4,7 +4,12 @@ from app.schemas.analysis import (
     AnalysisResponse,
     AnalysisResultStatus,
     DetectionOutcome,
-    FrameResult
+    VideoOutcome,
+    AudioOutcome,
+    FrameResult,
+    VideoAnalysisComponent,
+    AudioAnalysisComponent,
+    AVConsistencyComponent
 )
 from app.core.config import settings
 
@@ -68,7 +73,30 @@ class ReportGenerator:
                     "Inference could not be executed because model weights were uninitialized.",
                     "Analysis was limited to frame extraction and face localization."
                 ],
-                error="Model weights unavailable or failed to initialize."
+                error="Model weights unavailable or failed to initialize.",
+                video_analysis=VideoAnalysisComponent(
+                    status=AnalysisResultStatus.FAILED,
+                    outcome=VideoOutcome.UNABLE_TO_ASSESS,
+                    model_name=model_name,
+                    frames_analyzed=frames_analyzed,
+                    faces_detected=0,
+                    risk_score=None,
+                    score_explanation="Detector offline.",
+                    findings=["Model weights uninitialized."],
+                    limitations=["Model not loaded."]
+                ),
+                audio_analysis=AudioAnalysisComponent(
+                    has_audio=False,
+                    status="no_audio_detected",
+                    outcome=AudioOutcome.AUDIO_UNAVAILABLE,
+                    model_name="Audio Forensics Engine (Offline)",
+                    duration_seconds=duration_seconds,
+                    findings=["Audio stream was not processed."]
+                ),
+                av_consistency=AVConsistencyComponent(
+                    status="not_checked",
+                    findings=["AV consistency check not performed."]
+                )
             )
 
         # Extract scored frames
@@ -77,6 +105,18 @@ class ReportGenerator:
 
         # Case 1: No faces detected in video
         if not valid_scores or total_faces_found == 0:
+            summary_nf = "Unable to assess video: TruthLens AI forensic detection requires localized human faces, but no faces were identified in the sampled frames."
+            score_expl_nf = "No human facial regions were localized in the sampled frames."
+            findings_nf = [
+                f"Evaluated {frames_analyzed} sampled frames across {duration_seconds or 0:.1f}s playback.",
+                "Haar cascade facial localization identified 0 human face regions.",
+                "Non-facial visual media or abstract content cannot be assessed by facial forensics models."
+            ]
+            limitations_nf = [
+                "The current detector is specialized for facial manipulation and cannot evaluate full-scene diffusion without visible faces.",
+                "Heavy occlusions, extreme profile angles, or low lighting may prevent face detection."
+            ]
+
             return AnalysisResponse(
                 analysis_id=analysis_id,
                 status=AnalysisResultStatus.COMPLETED,
@@ -86,20 +126,36 @@ class ReportGenerator:
                 result=DetectionOutcome.UNABLE_TO_ASSESS,
                 risk_score=None,
                 score_type="facial_region_anomaly_index",
-                score_explanation="No human facial regions were localized in the sampled frames.",
-                summary="Unable to assess video: TruthLens AI forensic detection requires localized human faces, but no faces were identified in the sampled frames.",
-                findings=[
-                    f"Evaluated {frames_analyzed} sampled frames across {duration_seconds or 0:.1f}s playback.",
-                    "Haar cascade facial localization identified 0 human face regions.",
-                    "Non-facial visual media or abstract content cannot be assessed by facial forensics models."
-                ],
+                score_explanation=score_expl_nf,
+                summary=summary_nf,
+                findings=findings_nf,
                 frame_results=frame_results,
                 model_name=model_name,
-                limitations=[
-                    "The current detector is specialized for facial manipulation and cannot evaluate full-scene diffusion without visible faces.",
-                    "Heavy occlusions, extreme profile angles, or low lighting may prevent face detection."
-                ],
-                error=None
+                limitations=limitations_nf,
+                error=None,
+                video_analysis=VideoAnalysisComponent(
+                    status=AnalysisResultStatus.COMPLETED,
+                    outcome=VideoOutcome.UNABLE_TO_ASSESS,
+                    model_name=model_name,
+                    frames_analyzed=frames_analyzed,
+                    faces_detected=0,
+                    risk_score=None,
+                    score_explanation=score_expl_nf,
+                    findings=findings_nf,
+                    limitations=limitations_nf
+                ),
+                audio_analysis=AudioAnalysisComponent(
+                    has_audio=False,
+                    status="no_audio_detected",
+                    outcome=AudioOutcome.AUDIO_UNAVAILABLE,
+                    model_name="Audio Forensics Module",
+                    duration_seconds=duration_seconds,
+                    findings=["No audio speech stream evaluated."]
+                ),
+                av_consistency=AVConsistencyComponent(
+                    status="unable_to_assess",
+                    findings=["No human faces localized for lip-sync correlation."]
+                )
             )
 
         # Compute aggregate metrics
@@ -119,6 +175,7 @@ class ReportGenerator:
         # Determine forensic outcome
         if aggregate_risk >= self.high_threshold:
             outcome = DetectionOutcome.POTENTIAL_MANIPULATION_DETECTED
+            video_outcome = VideoOutcome.POTENTIALLY_MANIPULATED
             summary = (
                 f"Potential facial manipulation detected. Visual artifacts consistent with AI synthesis "
                 f"or face swapping were identified across sampled keyframes (aggregate risk score: {aggregate_risk:.2f})."
@@ -129,6 +186,7 @@ class ReportGenerator:
             )
         elif aggregate_risk <= self.low_threshold:
             outcome = DetectionOutcome.NO_STRONG_SIGNS_DETECTED
+            video_outcome = VideoOutcome.POTENTIALLY_GENUINE
             summary = (
                 f"No strong signs of facial manipulation detected. Sampled facial textures and boundary "
                 f"transitions appear consistent with authentic camera captures (aggregate risk score: {aggregate_risk:.2f})."
@@ -139,6 +197,7 @@ class ReportGenerator:
             )
         else:
             outcome = DetectionOutcome.UNABLE_TO_ASSESS
+            video_outcome = VideoOutcome.UNABLE_TO_ASSESS
             summary = (
                 f"Inconclusive analysis. The aggregate anomaly score ({aggregate_risk:.2f}) falls in the ambiguous "
                 f"borderline range ({self.low_threshold:.2f} - {self.high_threshold:.2f}), where compression noise "
@@ -166,6 +225,43 @@ class ReportGenerator:
             "Predictions should be evaluated alongside chain-of-custody and corroborating context."
         ]
 
+        # Multi-modal component breakdown
+        video_component = VideoAnalysisComponent(
+            status=AnalysisResultStatus.COMPLETED,
+            outcome=video_outcome,
+            model_name=model_name,
+            frames_analyzed=frames_analyzed,
+            faces_detected=total_faces_found,
+            risk_score=aggregate_risk,
+            score_explanation=score_explanation,
+            findings=findings,
+            limitations=limitations
+        )
+
+        audio_component = AudioAnalysisComponent(
+            has_audio=False,
+            status="no_audio_detected",
+            outcome=AudioOutcome.AUDIO_UNAVAILABLE,
+            model_name="TruthLens Audio Forensics Engine (Offline)",
+            duration_seconds=duration_seconds,
+            segments_analyzed=0,
+            risk_score=None,
+            score_explanation="Audio forensics pipeline was not engaged for this media stream.",
+            findings=["Audio stream was not processed for deepfake speech anomalies."],
+            limitations=["Voice cloning and speech synthesis detection are not verified in this visual inspection."]
+        )
+
+        av_component = AVConsistencyComponent(
+            status="not_checked",
+            sync_score=None,
+            active_speaking_frames=None,
+            findings=[
+                "Audio-video synchronization and lip-sync analysis is not implemented in this version.",
+                "Facial visual forensics is evaluated independently from audio track."
+            ],
+            disclaimer="TruthLens facial detector analyzes spatial video frames. Lip-sync correlation is not computed."
+        )
+
         return AnalysisResponse(
             analysis_id=analysis_id,
             status=AnalysisResultStatus.COMPLETED,
@@ -181,7 +277,10 @@ class ReportGenerator:
             frame_results=frame_results,
             model_name=model_name,
             limitations=limitations,
-            error=None
+            error=None,
+            video_analysis=video_component,
+            audio_analysis=audio_component,
+            av_consistency=av_component
         )
 
 report_generator = ReportGenerator()
