@@ -4,7 +4,6 @@ import { ShieldCheck, Video } from 'lucide-react';
 import { apiService } from '@/services/api';
 import { VideoDropzone } from '@/components/upload/VideoDropzone';
 import { VideoPreview } from '@/components/upload/VideoPreview';
-import { SampleVideoPicker, SAMPLES } from '@/components/upload/SampleVideoPicker';
 import { AnalysisProgress } from '@/components/analysis/AnalysisProgress';
 import { ErrorState } from '@/components/common/ErrorState';
 import { AnalysisResponse } from '@/types/analysis';
@@ -28,13 +27,10 @@ export const AnalyzePage: React.FC = () => {
     setError(null);
   };
 
-  const handleSelectSample = (sample: typeof SAMPLES[0]) => {
-    setError(null);
-    // Create synthetic File object representing the chosen sample video
-    const sampleContent = new Uint8Array([0x00, 0x00, 0x00, 0x18, 0x66, 0x74, 0x79, 0x70, 0x6d, 0x70, 0x34, 0x32]);
-    const mockBlob = new Blob([sampleContent], { type: 'video/mp4' });
-    const sampleFile = new File([mockBlob], `${sample.id}.mp4`, { type: 'video/mp4' });
-    setSelectedFile(sampleFile);
+  const handleCancelAnalysis = () => {
+    setIsAnalyzing(false);
+    setUploadProgress(0);
+    setError('Analysis cancelled by investigator.');
   };
 
   const handleStartAnalysis = async () => {
@@ -79,10 +75,11 @@ export const AnalyzePage: React.FC = () => {
           <span>Forensic Laboratory Terminal</span>
         </div>
         <h1 className="text-3xl font-extrabold tracking-tight text-forensic-text">
-          Video Authenticity & Deepfake Scanner
+          Video & Audio Deepfake Scanner
         </h1>
         <p className="text-sm text-forensic-muted leading-relaxed max-w-2xl">
-          Upload video media to execute multiframe facial boundary localization, biological signal consistency checks, and pretrained neural detector evaluation.
+          Upload video media to execute parallel facial boundary inspection, acoustic vocoder artifact analysis,
+          and cross-modal temporal consistency checks.
         </p>
       </div>
 
@@ -91,6 +88,7 @@ export const AnalyzePage: React.FC = () => {
         <AnalysisProgress
           uploadPercent={uploadProgress}
           filename={selectedFile?.name || 'video_stream.mp4'}
+          onCancel={handleCancelAnalysis}
         />
       ) : (
         <div className="space-y-6">
@@ -105,11 +103,6 @@ export const AnalyzePage: React.FC = () => {
             />
           )}
 
-          {/* Sample Video Shortcuts for Hackathon Judges */}
-          {!selectedFile && (
-            <SampleVideoPicker onSelectSample={handleSelectSample} disabled={isAnalyzing} />
-          )}
-
           {/* Consent and Responsible Use Box */}
           <div className="forensic-card p-4 space-y-2 border-forensic-border/70 bg-background-secondary/30">
             <label className="flex items-start space-x-3 cursor-pointer select-none">
@@ -120,7 +113,7 @@ export const AnalyzePage: React.FC = () => {
                 className="mt-1 rounded bg-background border-forensic-border text-accent-cyan focus:ring-accent-cyan shrink-0"
               />
               <span className="text-xs text-forensic-muted leading-relaxed">
-                <strong className="text-forensic-text">Responsible Use & Forensic Ethics:</strong> I confirm I have the right to analyze this media. I understand TruthLens AI provides probabilistic forensic assessment, not mathematical or legal proof of guilt or innocence.
+                <strong className="text-forensic-text font-semibold">Responsible Use & Forensic Ethics:</strong> I confirm I have the right to analyze this media. I understand TruthLens AI provides probabilistic forensic assessment, not mathematical or legal proof of guilt or innocence.
               </span>
             </label>
           </div>
@@ -147,7 +140,7 @@ export const AnalyzePage: React.FC = () => {
                   type="button"
                   onClick={handleClearFile}
                   disabled={isAnalyzing}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-forensic-border text-xs text-forensic-muted hover:text-forensic-text transition-colors"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-forensic-border text-xs text-forensic-muted hover:text-forensic-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-cyan"
                 >
                   Clear
                 </button>
@@ -157,7 +150,7 @@ export const AnalyzePage: React.FC = () => {
                 type="button"
                 disabled={!selectedFile || isAnalyzing || !consentAcknowledged}
                 onClick={handleStartAnalysis}
-                className={`w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg text-xs font-bold transition-all ${
+                className={`w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-accent-cyan ${
                   !selectedFile || isAnalyzing || !consentAcknowledged
                     ? 'bg-background-card border border-forensic-border text-forensic-muted cursor-not-allowed opacity-50'
                     : 'bg-accent-cyan text-background hover:bg-accent-cyan/90 shadow-glow-cyan'

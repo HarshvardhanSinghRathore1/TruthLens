@@ -3,25 +3,68 @@
 @tailwind utilities;
 
 @layer base {
+  :root,
+  .dark {
+    /* Dark Forensic Theme Tokens (Default) */
+    --bg-main: #0B1020;
+    --bg-secondary: #111A2E;
+    --bg-card: #151F35;
+    --text-main: #F8FAFC;
+    --text-muted: #94A3B8;
+    --border: #26334D;
+    --border-subtle: #1A243B;
+    --accent-cyan: #38D9FF;
+    --accent-violet: #8B5CF6;
+    --forensic-success: #22C55E;
+    --forensic-warning: #F59E0B;
+    --forensic-error: #EF4444;
+    --glow-cyan: 0 0 24px -3px rgba(56, 217, 255, 0.25);
+    --glow-violet: 0 0 24px -3px rgba(139, 92, 246, 0.25);
+    --card-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.4);
+  }
+
   body {
-    @apply bg-background text-forensic-text;
+    background-color: var(--bg-main);
+    color: var(--text-main);
     background-image: 
-      radial-gradient(circle at 50% 0%, rgba(56, 217, 255, 0.05) 0%, transparent 50%),
-      radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.04) 0%, transparent 40%);
+      radial-gradient(circle at 50% 0%, rgba(56, 217, 255, 0.06) 0%, transparent 50%),
+      radial-gradient(circle at 85% 25%, rgba(139, 92, 246, 0.05) 0%, transparent 40%);
     background-attachment: fixed;
   }
 }
 
 @layer utilities {
   .forensic-card {
-    @apply bg-background-card border border-forensic-border rounded-xl backdrop-blur-sm transition-all duration-200;
+    background-color: var(--bg-card);
+    border: 1px solid var(--border);
+    box-shadow: var(--card-shadow);
+    border-radius: 0.75rem;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   }
   
   .forensic-card-hover {
-    @apply hover:border-accent-cyan/50 hover:shadow-glow-cyan;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+  .forensic-card-hover:hover {
+    border-color: var(--accent-cyan);
+    box-shadow: var(--glow-cyan);
+    transform: translateY(-1px);
   }
 
   .forensic-gradient-text {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-accent-cyan via-blue-400 to-accent-violet;
+    background-clip: text;
+    -webkit-background-clip: text;
+    color: transparent;
+    background-image: linear-gradient(to right, var(--accent-cyan), #60A5FA, var(--accent-violet));
+  }
+}
+
+/* Reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }

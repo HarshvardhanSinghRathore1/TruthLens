@@ -4,25 +4,27 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
         background: {
-          DEFAULT: '#0B1020',
-          secondary: '#111A2E',
-          card: '#151F35',
+          DEFAULT: 'var(--bg-main)',
+          secondary: 'var(--bg-secondary)',
+          card: 'var(--bg-card)',
         },
         accent: {
-          cyan: '#38D9FF',
-          violet: '#8B5CF6',
+          cyan: 'var(--accent-cyan)',
+          violet: 'var(--accent-violet)',
         },
         forensic: {
-          border: '#26334D',
-          muted: '#94A3B8',
-          text: '#F8FAFC',
-          success: '#22C55E',
-          warning: '#F59E0B',
-          error: '#EF4444',
+          border: 'var(--border)',
+          'border-subtle': 'var(--border-subtle)',
+          muted: 'var(--text-muted)',
+          text: 'var(--text-main)',
+          success: 'var(--forensic-success)',
+          warning: 'var(--forensic-warning)',
+          error: 'var(--forensic-error)',
         }
       },
       fontFamily: {
@@ -30,8 +32,8 @@ export default {
         mono: ['JetBrains Mono', 'Fira Code', 'monospace'],
       },
       boxShadow: {
-        'glow-cyan': '0 0 20px -3px rgba(56, 217, 255, 0.25)',
-        'glow-violet': '0 0 20px -3px rgba(139, 92, 246, 0.25)',
+        'glow-cyan': 'var(--glow-cyan)',
+        'glow-violet': 'var(--glow-violet)',
       }
     },
   },
