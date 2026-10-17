@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from enum import Enum
 from typing import List, Optional
 from pydantic import BaseModel, Field
@@ -13,6 +13,17 @@ class DetectionOutcome(str, Enum):
     NO_STRONG_SIGNS_DETECTED = "no_strong_signs_detected"
     UNABLE_TO_ASSESS = "unable_to_assess"
 
+class VideoOutcome(str, Enum):
+    POTENTIALLY_GENUINE = "potentially_genuine"
+    POTENTIALLY_MANIPULATED = "potentially_manipulated"
+    UNABLE_TO_ASSESS = "unable_to_assess"
+
+class AudioOutcome(str, Enum):
+    POTENTIALLY_GENUINE_SPEECH = "potentially_genuine_speech"
+    POTENTIALLY_SPOOFED_SPEECH = "potentially_spoofed_speech"
+    UNABLE_TO_ASSESS = "unable_to_assess"
+    AUDIO_UNAVAILABLE = "audio_unavailable"
+
 class FrameResult(BaseModel):
     frame_index: int
     timestamp_seconds: float
@@ -20,6 +31,36 @@ class FrameResult(BaseModel):
     manipulation_score: Optional[float] = None
     preview_image: Optional[str] = None
     notes: Optional[str] = None
+
+class VideoAnalysisComponent(BaseModel):
+    status: AnalysisResultStatus = AnalysisResultStatus.COMPLETED
+    outcome: VideoOutcome = VideoOutcome.UNABLE_TO_ASSESS
+    model_name: str
+    frames_analyzed: int
+    faces_detected: Optional[int] = 0
+    risk_score: Optional[float] = None
+    score_explanation: Optional[str] = None
+    findings: List[str] = Field(default_factory=list)
+    limitations: List[str] = Field(default_factory=list)
+
+class AudioAnalysisComponent(BaseModel):
+    has_audio: bool = False
+    status: str = "no_audio_detected"
+    outcome: AudioOutcome = AudioOutcome.AUDIO_UNAVAILABLE
+    model_name: str = "Audio Forensics Module"
+    duration_seconds: Optional[float] = None
+    segments_analyzed: Optional[int] = 0
+    risk_score: Optional[float] = None
+    score_explanation: Optional[str] = None
+    findings: List[str] = Field(default_factory=list)
+    limitations: List[str] = Field(default_factory=list)
+
+class AVConsistencyComponent(BaseModel):
+    status: str = "not_checked"
+    sync_score: Optional[float] = None
+    active_speaking_frames: Optional[int] = None
+    findings: List[str] = Field(default_factory=list)
+    disclaimer: str = "TruthLens facial detector analyzes spatial video frames. Lip-sync correlation is not computed."
 
 class AnalysisResponse(BaseModel):
     analysis_id: str = Field(..., description="Unique analysis execution identifier")
@@ -54,7 +95,12 @@ class AnalysisResponse(BaseModel):
         description="Methodological limitations, caveats, and disclaimers"
     )
     error: Optional[str] = Field(None, description="Error details if analysis could not be completed")
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
+
+    # Multimodal component extensions matching frontend expectations
+    video_analysis: Optional[VideoAnalysisComponent] = None
+    audio_analysis: Optional[AudioAnalysisComponent] = None
+    av_consistency: Optional[AVConsistencyComponent] = None
 
 class HealthResponse(BaseModel):
     status: str = "ok"
@@ -62,4 +108,6 @@ class HealthResponse(BaseModel):
     version: str = "1.0.0"
     model_loaded: bool = False
     model_name: str = "TruthLens Detector"
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    audio_model_loaded: bool = False
+    audio_model_name: str = "Audio Forensics (Offline)"
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))

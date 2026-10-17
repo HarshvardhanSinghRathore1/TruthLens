@@ -32,7 +32,7 @@ class Settings(BaseSettings):
     FACE_PADDING_PERCENT: float = 0.20
     ALLOWED_EXTENSIONS: List[str] = [".mp4", ".avi", ".mov", ".webm", ".mkv"]
 
-    # Model Settings
+    # Video Model Settings
     MODEL_NAME: str = "Vision Transformer (ViT) Deepfake Detector"
     MODEL_ID: str = "dima806/deepfake_vs_real_image_detection"
     MODEL_WEIGHTS_PATH: str = ""
@@ -40,6 +40,16 @@ class Settings(BaseSettings):
     HIGH_RISK_THRESHOLD: float = 0.65
     LOW_RISK_THRESHOLD: float = 0.40
     AUTO_DOWNLOAD_MODELS: bool = False
+
+    # Audio Model Settings
+    ENABLE_AUDIO_DETECTION: bool = True
+    AUDIO_MODEL_NAME: str = "Wav2Vec2 Speech Anti-Spoofing Detector"
+    AUDIO_MODEL_ID: str = "Vansh180/deepfake-audio-wav2vec2"
+    AUDIO_SAMPLE_RATE: int = 16000
+    AUDIO_SEGMENT_DURATION_SEC: float = 5.0
+    AUDIO_MAX_DURATION_SEC: float = 60.0
+    AUDIO_HIGH_RISK_THRESHOLD: float = 0.65
+    AUDIO_LOW_RISK_THRESHOLD: float = 0.40
 
     # Database Settings (Optional)
     MONGODB_URI: str = ""
