@@ -126,27 +126,6 @@ export const ModelInfoPage: React.FC = () => {
           </span>
         </div>
       </div>
-
-      {/* Reference Benchmark Citations */}
-      <div className="forensic-card p-6 space-y-4">
-        <h3 className="text-sm font-bold text-forensic-text">
-          Verified Academic Literature & Benchmark Citations
-        </h3>
-        <ul className="space-y-2 text-xs text-forensic-muted">
-          <li className="flex items-center justify-between p-2.5 rounded bg-background-secondary/40 border border-forensic-border/50">
-            <span>Rössler et al. &mdash; <em>FaceForensics++: Learning to Detect Manipulated Facial Images</em> (ICCV 2019)</span>
-            <span className="text-[11px] font-mono text-accent-cyan">Benchmark</span>
-          </li>
-          <li className="flex items-center justify-between p-2.5 rounded bg-background-secondary/40 border border-forensic-border/50">
-            <span>Yamagishi et al. &mdash; <em>ASVspoof: Automatic Speaker Verification Spoofing and Countermeasures</em></span>
-            <span className="text-[11px] font-mono text-accent-violet">Benchmark</span>
-          </li>
-          <li className="flex items-center justify-between p-2.5 rounded bg-background-secondary/40 border border-forensic-border/50">
-            <span>Afchar et al. &mdash; <em>MesoNet: a Compact Facial Video Forgery Detection Network</em></span>
-            <span className="text-[11px] font-mono text-accent-cyan">Architecture</span>
-          </li>
-        </ul>
-      </div>
     </div>
   );
 };

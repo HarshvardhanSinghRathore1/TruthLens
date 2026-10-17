@@ -10,8 +10,6 @@ export const Footer: React.FC = () => {
           <div className="flex items-center space-x-2">
             <Shield className="w-4 h-4 text-accent-cyan" />
             <span className="font-semibold text-forensic-text">TruthLens AI</span>
-            <span>&bull;</span>
-            <span className="font-mono">Cyber Samvad Hackathon 2026</span>
           </div>
 
           <div className="flex items-center space-x-4 text-xs font-medium">

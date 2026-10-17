@@ -15,10 +15,10 @@ export const HomePage: React.FC = () => {
     <div className="space-y-16 py-8">
       {/* Hero Section */}
       <section className="relative overflow-hidden py-10 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center space-y-6">
-        {/* Hackathon Badge */}
+        {/* Forensic Category Badge */}
         <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-accent-cyan/10 border border-accent-cyan/30 text-accent-cyan text-xs font-mono">
           <ShieldCheck className="w-3.5 h-3.5" />
-          <span>Cyber Samvad Hackathon 2026 &bull; Digital Media Forensics</span>
+          <span>Digital Media Forensics</span>
         </div>
 
         {/* Headline */}
