@@ -18,6 +18,7 @@ class FrameResult(BaseModel):
     timestamp_seconds: float
     faces_detected: int = 0
     manipulation_score: Optional[float] = None
+    preview_image: Optional[str] = None
     notes: Optional[str] = None
 
 class AnalysisResponse(BaseModel):

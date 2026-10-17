@@ -42,4 +42,18 @@ class AnalysisRepository:
             logger.warning(f"Failed to retrieve analysis from MongoDB: {e}")
             return None
 
+    async def list_analyses(self, limit: int = 20):
+        if not self.is_available:
+            return []
+        try:
+            cursor = database.db["analyses"].find().sort("created_at", -1).limit(limit)
+            docs = []
+            async for doc in cursor:
+                doc.pop("_id", None)
+                docs.append(doc)
+            return docs
+        except Exception as e:
+            logger.warning(f"Failed to list analyses from MongoDB: {e}")
+            return []
+
 analysis_repository = AnalysisRepository()
