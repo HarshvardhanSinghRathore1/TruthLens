@@ -33,12 +33,13 @@ class Settings(BaseSettings):
     ALLOWED_EXTENSIONS: List[str] = [".mp4", ".avi", ".mov", ".webm", ".mkv"]
 
     # Video Model Settings
-    MODEL_NAME: str = "Vision Transformer (ViT) Deepfake Detector"
-    MODEL_ID: str = "dima806/deepfake_vs_real_image_detection"
+    MODEL_NAME: str = "EfficientNet-B4 Deepfake Detector"
+    MODEL_ID: str = "honi05/deepfake-detection"
+    MODEL_CHECKPOINT_FILE: str = "best_model.pt"
     MODEL_WEIGHTS_PATH: str = ""
     DEVICE: str = "cpu"
-    HIGH_RISK_THRESHOLD: float = 0.65
-    LOW_RISK_THRESHOLD: float = 0.40
+    HIGH_RISK_THRESHOLD: float = 0.50
+    LOW_RISK_THRESHOLD: float = 0.25
 
     # Audio Model Settings
     ENABLE_AUDIO_DETECTION: bool = True

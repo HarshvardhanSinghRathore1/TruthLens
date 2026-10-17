@@ -42,17 +42,19 @@ TruthLens AI provides genuine, dual-modal deepfake screening for video and audio
 
 ## 2. Pretrained Models & Forensic Specifications
 
-### 2.1 Video Model: Vision Transformer (ViT)
-- **Model ID:** `dima806/deepfake_vs_real_image_detection`
-- **Architecture:** Vision Transformer (`google/vit-base-patch16-224-in21k` backbone fine-tuned for facial deepfake detection)
-- **License:** Apache 2.0
-- **Input Specifications:** 224x224 RGB image tensor, normalized by ImageNet statistics.
-- **Classification Head:** Binary Softmax Classifier
-  - Index 0: `Real` (Authentic facial features)
-  - Index 1: `Fake` (Synthetic / manipulated artifacts)
+### 2.1 Video Model: EfficientNet-B4 Deepfake Detector
+- **Model ID:** `honi05/deepfake-detection`
+- **Checkpoint:** `best_model.pt`
+- **Architecture:** EfficientNet-B4 backbone (`torchvision.models.efficientnet_b4`) with custom classification head fine-tuned on Celeb-DF v2.
+  - Features: Blocks 0 to 8 (1792 feature channels).
+  - Head: AdaptiveAvgPool2d(1) -> Flatten -> Dropout(0.4) -> Linear(1792, 256) -> ReLU -> Dropout(0.2) -> Linear(256, 1).
+- **License:** MIT License
+- **Input Specifications:** 224x224 RGB image tensor, normalized by ImageNet statistics (`mean=[0.485, 0.456, 0.406]`, `std=[0.229, 0.224, 0.225]`).
+- **Classification Output & Activation:** Single logit $z$.
+  - Sigmoid activation: $\text{Prob}(\text{Fake}) = \frac{1}{1 + e^{-z}}$.
+  - Fake probability $\ge 0.50 \implies \text{Fake}$, $< 0.50 \implies \text{Real}$.
 - **Score Definition:**
-  - `manipulation_score`: Softmax probability of Class 1 (`Fake`).
-  - Range: `0.00` (low anomaly) to `1.00` (high anomaly).
+  - `manipulation_score`: Sigmoid fake probability $\in [0.00, 1.00]$.
 - **Video-Level Aggregation:**
   - $0.65 \times \text{top\_3\_mean} + 0.35 \times \text{mean\_score}$
 - **Outcome Categories:**

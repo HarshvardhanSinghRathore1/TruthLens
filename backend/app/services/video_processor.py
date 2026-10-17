@@ -62,23 +62,25 @@ class VideoProcessor:
     def _create_thumbnail_base64(self, frame: np.ndarray, faces: List[Any], max_width: int = 360) -> str:
         """Draws forensic face overlays and encodes a compact base64 JPEG preview."""
         h, w = frame.shape[:2]
-        preview_frame = frame.copy()
+
+        # Scale down first for speed and memory efficiency on high-resolution/4K video
+        if w > max_width:
+            scale = max_width / float(w)
+            new_h = int(h * scale)
+            preview_frame = cv2.resize(frame, (max_width, new_h), interpolation=cv2.INTER_AREA)
+        else:
+            scale = 1.0
+            preview_frame = frame.copy()
 
         # Draw subtle forensic cyan bounding box for detected faces
         for (x, y, fw, fh) in faces:
             cv2.rectangle(
                 preview_frame,
-                (int(x), int(y)),
-                (int(x + fw), int(y + fh)),
+                (int(x * scale), int(y * scale)),
+                (int((x + fw) * scale), int((y + fh) * scale)),
                 (255, 217, 56), # BGR for cyan #38D9FF (56, 217, 255)
                 2
             )
-
-        # Scale down for efficient frontend payload
-        if w > max_width:
-            scale = max_width / float(w)
-            new_h = int(h * scale)
-            preview_frame = cv2.resize(preview_frame, (max_width, new_h), interpolation=cv2.INTER_AREA)
 
         _, buffer = cv2.imencode(".jpg", preview_frame, [cv2.IMWRITE_JPEG_QUALITY, 75])
         encoded = base64.b64encode(buffer).decode("utf-8")
@@ -128,14 +130,31 @@ class VideoProcessor:
 
                 timestamp = frame_idx / fps if fps > 0 else 0.0
 
-                # Detect faces using Haar Cascade
+                # Detect faces using Haar Cascade with multi-resolution optimization for 1080p/4K
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                detected_faces = self.face_cascade.detectMultiScale(
-                    gray,
-                    scaleFactor=1.15,
-                    minNeighbors=5,
-                    minSize=(50, 50)
-                )
+                max_det_dim = 640
+                if width > max_det_dim or height > max_det_dim:
+                    det_scale = max_det_dim / float(max(width, height))
+                    det_w = int(width * det_scale)
+                    det_h = int(height * det_scale)
+                    det_gray = cv2.resize(gray, (det_w, det_h), interpolation=cv2.INTER_AREA)
+                    raw_faces = self.face_cascade.detectMultiScale(
+                        det_gray,
+                        scaleFactor=1.15,
+                        minNeighbors=5,
+                        minSize=(max(20, int(35 * det_scale)), max(20, int(35 * det_scale)))
+                    )
+                    detected_faces = [
+                        (int(rx / det_scale), int(ry / det_scale), int(rw / det_scale), int(rh / det_scale))
+                        for (rx, ry, rw, rh) in raw_faces
+                    ]
+                else:
+                    detected_faces = self.face_cascade.detectMultiScale(
+                        gray,
+                        scaleFactor=1.15,
+                        minNeighbors=5,
+                        minSize=(50, 50)
+                    )
 
                 face_crops = []
                 face_boxes = []

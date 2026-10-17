@@ -12,7 +12,7 @@ def test_inference_pipeline_on_sample_videos():
         health_data = health.json()
         assert health_data["status"] == "ok"
         assert health_data["model_loaded"] is True
-        assert "Vision Transformer" in health_data["model_name"]
+        assert "EfficientNet-B4" in health_data["model_name"]
 
         # 2. Analyze video without faces -> unable_to_assess
         sample_nf = os.path.join("samples", "demo_no_face.mp4")

@@ -57,9 +57,12 @@ export const AnalyzePage: React.FC = () => {
       // Navigate to results screen with payload
       navigate('/results', { state: { analysis: response } });
     } catch (err: any) {
-      const msg =
+      let msg =
         err?.message ||
         'Could not complete forensic analysis. Ensure backend is running at VITE_API_BASE_URL.';
+      if (typeof msg === 'string' && msg.toLowerCase().includes('timeout')) {
+        msg = 'Analysis timed out. The server was busy processing high-resolution media. Please try again.';
+      }
       setError(msg);
     } finally {
       setIsAnalyzing(false);
