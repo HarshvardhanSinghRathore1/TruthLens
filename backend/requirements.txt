@@ -11,9 +11,11 @@ opencv-python-headless>=4.9.0.80
 numpy>=1.26.0
 Pillow>=10.2.0
 
-# Deep Learning (PyTorch)
+# Deep Learning (PyTorch & Transformers)
 torch>=2.2.0
 torchvision>=0.17.0
+transformers>=4.38.0
+safetensors>=0.4.0
 
 # Optional Database Driver
 motor>=3.3.2

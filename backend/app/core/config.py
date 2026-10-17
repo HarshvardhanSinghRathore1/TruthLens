@@ -26,14 +26,19 @@ class Settings(BaseSettings):
     # Storage & Processing
     UPLOAD_DIR: str = "uploads"
     MAX_FILE_SIZE_MB: int = 100
-    MAX_FRAMES_TO_EXTRACT: int = 20
+    MAX_FRAMES_TO_EXTRACT: int = 12
+    MAX_VIDEO_DURATION_SEC: int = 300
     FRAME_SAMPLE_INTERVAL_SEC: float = 0.5
+    FACE_PADDING_PERCENT: float = 0.20
     ALLOWED_EXTENSIONS: List[str] = [".mp4", ".avi", ".mov", ".webm", ".mkv"]
 
     # Model Settings
-    MODEL_NAME: str = "TruthLens Pretrained ResNet/EfficientNet Detector v1.0"
-    MODEL_WEIGHTS_PATH: str = "app/models/weights/model_weights.pt"
+    MODEL_NAME: str = "Vision Transformer (ViT) Deepfake Detector"
+    MODEL_ID: str = "dima806/deepfake_vs_real_image_detection"
+    MODEL_WEIGHTS_PATH: str = ""
     DEVICE: str = "cpu"
+    HIGH_RISK_THRESHOLD: float = 0.65
+    LOW_RISK_THRESHOLD: float = 0.40
 
     # Database Settings (Optional)
     MONGODB_URI: str = ""

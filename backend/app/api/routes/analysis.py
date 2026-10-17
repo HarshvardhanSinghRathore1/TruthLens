@@ -75,6 +75,14 @@ async def analyze_video(file: UploadFile = File(...)):
             except OSError as e:
                 logger.warning(f"Could not remove temp file {temp_path}: {e}")
 
+@router.get("/analyses", response_model=list[AnalysisResponse])
+async def list_analyses(limit: int = 20):
+    """
+    Retrieve recent historical analysis reports if MongoDB persistence is enabled.
+    """
+    records = await analysis_repository.list_analyses(limit=limit)
+    return records
+
 @router.get("/analyses/{analysis_id}", response_model=AnalysisResponse)
 async def get_analysis_by_id(analysis_id: str):
     """
@@ -87,3 +95,4 @@ async def get_analysis_by_id(analysis_id: str):
             detail=f"Analysis '{analysis_id}' not found or history persistence is disabled."
         )
     return record
+
