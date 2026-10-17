@@ -128,7 +128,7 @@ export const VideoDropzone: React.FC<VideoDropzoneProps> = ({ onFileSelect, disa
             <button
               type="button"
               disabled={disabled}
-              className="inline-flex items-center space-x-2 px-4 py-2 rounded-lg bg-white border border-odoo-border text-xs font-semibold text-odoo-text hover:bg-background-secondary hover:border-primary/40 transition-colors shadow-odoo-xs"
+              className="btn-odoo-secondary space-x-2 px-4 py-2 min-h-[38px] text-xs font-semibold"
             >
               <FolderOpen className="w-3.5 h-3.5 text-primary" />
               <span>Select File from Device</span>

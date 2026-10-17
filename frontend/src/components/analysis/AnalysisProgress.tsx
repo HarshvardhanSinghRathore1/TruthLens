@@ -123,17 +123,17 @@ export const AnalysisProgress: React.FC<AnalysisProgressProps> = ({
         })}
       </div>
 
-      <div className="flex items-center justify-between pt-3 border-t border-forensic-border">
-        <p className="text-[11px] text-forensic-muted italic">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 pt-3 border-t border-odoo-border text-left">
+        <p className="text-[11px] text-odoo-muted italic leading-relaxed">
           Forensic inference runs locally on CPU/GPU. High-resolution media may take 30–60 seconds. Please do not close this window.
         </p>
         {onCancel && (
           <button
             type="button"
             onClick={onCancel}
-            className="inline-flex items-center space-x-1 text-xs text-odoo-muted hover:text-forensic-error transition-colors"
+            className="btn-odoo-secondary space-x-1.5 px-3.5 py-1.5 min-h-[34px] text-xs font-semibold hover:bg-red-50 hover:text-forensic-error hover:border-red-300 active:bg-red-100 shrink-0 self-end sm:self-center"
           >
-            <XCircle className="w-3.5 h-3.5" />
+            <XCircle className="w-3.5 h-3.5 text-forensic-error" />
             <span>Cancel</span>
           </button>
         )}

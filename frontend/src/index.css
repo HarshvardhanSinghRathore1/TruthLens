@@ -15,7 +15,9 @@
 
     --primary-purple: #714B67;
     --primary-hover: #5B3B54;
+    --primary-active: #4A2F44;
     --primary-surface: #F2EAF2;
+    --primary-surface-active: #E2D4E2;
     --accent-purple: #875A9E;
 
     --accent-cyan: #714B67;
@@ -53,6 +55,215 @@
   }
   ::-webkit-scrollbar-thumb:hover {
     background: #B6ADC0;
+  }
+}
+ 
+@layer components {
+  /* Odoo Primary Button: Rich filled purple, crisp white text, distinct active/hover/focus */
+  .btn-odoo-primary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #FFFFFF;
+    background-color: #714B67;
+    border: 1px solid transparent;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 3px 0 rgba(37, 35, 51, 0.06), 0 1px 2px -1px rgba(37, 35, 51, 0.04);
+    user-select: none;
+  }
+  .btn-odoo-primary:hover:not(:disabled) {
+    background-color: #5B3B54;
+  }
+  .btn-odoo-primary:active:not(:disabled) {
+    background-color: #4A2F44;
+  }
+  .btn-odoo-primary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #714B67;
+  }
+  .btn-odoo-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Odoo Secondary Button: Crisp white bg, dark text #252333, border #E7E3EB, hover light purple */
+  .btn-odoo-secondary {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #252333;
+    background-color: #FFFFFF;
+    border: 1px solid #E7E3EB;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(37, 35, 51, 0.04);
+    user-select: none;
+  }
+  .btn-odoo-secondary:hover:not(:disabled) {
+    background-color: #F2EAF2;
+    color: #714B67;
+    border-color: rgba(113, 75, 103, 0.4);
+  }
+  .btn-odoo-secondary:active:not(:disabled) {
+    background-color: #E2D4E2;
+  }
+  .btn-odoo-secondary:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #714B67;
+  }
+  .btn-odoo-secondary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Odoo Soft Button: Light purple surface #F2EAF2, text #714B67, transitions to filled purple on hover */
+  .btn-odoo-soft {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    color: #714B67;
+    background-color: #F2EAF2;
+    border: 1px solid rgba(113, 75, 103, 0.25);
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(37, 35, 51, 0.04);
+    user-select: none;
+  }
+  .btn-odoo-soft:hover:not(:disabled) {
+    background-color: #714B67;
+    color: #FFFFFF;
+    border-color: transparent;
+  }
+  .btn-odoo-soft:active:not(:disabled) {
+    background-color: #4A2F44;
+  }
+  .btn-odoo-soft:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #714B67;
+  }
+  .btn-odoo-soft:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  /* Odoo Icon Action Button */
+  .btn-odoo-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #252333;
+    background-color: #FFFFFF;
+    border: 1px solid #E7E3EB;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(37, 35, 51, 0.04);
+    user-select: none;
+  }
+  .btn-odoo-icon:hover:not(:disabled) {
+    background-color: #F2EAF2;
+    color: #714B67;
+    border-color: rgba(113, 75, 103, 0.4);
+  }
+  .btn-odoo-icon:active:not(:disabled) {
+    background-color: #E2D4E2;
+  }
+  .btn-odoo-icon:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #714B67;
+  }
+  .btn-odoo-icon:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Odoo Danger Icon Action Button */
+  .btn-odoo-danger-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: #252333;
+    background-color: #FFFFFF;
+    border: 1px solid #E7E3EB;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(37, 35, 51, 0.04);
+    user-select: none;
+  }
+  .btn-odoo-danger-icon:hover:not(:disabled) {
+    background-color: #FEF2F2;
+    color: #DC3545;
+    border-color: #FCA5A5;
+  }
+  .btn-odoo-danger-icon:active:not(:disabled) {
+    background-color: #FEE2E2;
+  }
+  .btn-odoo-danger-icon:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #DC3545;
+  }
+  .btn-odoo-danger-icon:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+
+  /* Odoo Filter Pill - Inactive */
+  .btn-odoo-filter {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 500;
+    color: #252333;
+    background-color: #FFFFFF;
+    border: 1px solid #E7E3EB;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(37, 35, 51, 0.04);
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .btn-odoo-filter:hover {
+    background-color: #F2EAF2;
+    color: #714B67;
+    border-color: rgba(113, 75, 103, 0.4);
+  }
+  .btn-odoo-filter:active {
+    background-color: #E2D4E2;
+  }
+  .btn-odoo-filter:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #714B67;
+  }
+
+  /* Odoo Filter Pill - Active */
+  .btn-odoo-filter-active {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: #FFFFFF;
+    background-color: #714B67;
+    border: 1px solid #714B67;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease-in-out;
+    box-shadow: 0 1px 2px 0 rgba(37, 35, 51, 0.04);
+    user-select: none;
+    flex-shrink: 0;
+  }
+  .btn-odoo-filter-active:hover {
+    background-color: #5B3B54;
+    border-color: #5B3B54;
+  }
+  .btn-odoo-filter-active:active {
+    background-color: #4A2F44;
+    border-color: #4A2F44;
+  }
+  .btn-odoo-filter-active:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px #FFFFFF, 0 0 0 4px #714B67;
   }
 }
 

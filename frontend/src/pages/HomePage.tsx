@@ -38,7 +38,7 @@ export const HomePage: React.FC = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
           <Link
             to="/analyze"
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-sm transition-colors shadow-odoo-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="btn-odoo-primary w-full sm:w-auto space-x-2 px-6 py-3 min-h-[46px] text-sm font-semibold"
           >
             <Video className="w-4 h-4" />
             <span>Analyze Media</span>
@@ -47,17 +47,17 @@ export const HomePage: React.FC = () => {
 
           <Link
             to="/radar"
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-lg bg-white border border-odoo-border text-primary hover:bg-primary-surface/60 font-semibold text-sm transition-all shadow-odoo-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="btn-odoo-soft w-full sm:w-auto space-x-2 px-6 py-3 min-h-[46px] text-sm font-semibold"
           >
-            <Radio className="w-4 h-4 text-primary" />
+            <Radio className="w-4 h-4 text-inherit" />
             <span>Deepfake Radar</span>
           </Link>
 
           <Link
             to="/how-it-works"
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-3 rounded-lg bg-white border border-odoo-border text-odoo-text hover:bg-background-secondary font-medium text-sm transition-all shadow-odoo-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="btn-odoo-secondary w-full sm:w-auto space-x-2 px-6 py-3 min-h-[46px] text-sm font-semibold"
           >
-            <Eye className="w-4 h-4 text-odoo-muted" />
+            <Eye className="w-4 h-4 text-primary" />
             <span>How It Works</span>
           </Link>
         </div>

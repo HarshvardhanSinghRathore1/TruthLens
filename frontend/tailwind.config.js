@@ -17,13 +17,17 @@ export default {
         primary: {
           DEFAULT: '#714B67', // Signature Odoo Purple
           hover: '#5B3B54',
+          active: '#4A2F44',
           surface: '#F2EAF2', // Light purple surface
+          'surface-active': '#E2D4E2',
           accent: '#875A9E', // Accent purple
         },
         odoo: {
           purple: '#714B67',
           hover: '#5B3B54',
+          active: '#4A2F44',
           surface: '#F2EAF2',
+          'surface-active': '#E2D4E2',
           accent: '#875A9E',
           text: '#252333',
           muted: '#716D7A',

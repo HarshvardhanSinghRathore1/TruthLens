@@ -63,7 +63,7 @@ export const NewsDetailModal: React.FC<NewsDetailModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-background-secondary border border-odoo-border text-odoo-muted hover:text-odoo-text hover:bg-background-secondary/80 transition-colors"
+            className="btn-odoo-icon w-9 h-9"
             aria-label="Close modal"
           >
             <X className="w-5 h-5" />
@@ -150,10 +150,10 @@ export const NewsDetailModal: React.FC<NewsDetailModalProps> = ({
             href={story.source_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg bg-white hover:bg-background-secondary border border-odoo-border text-odoo-text text-xs font-mono transition-colors shadow-xs"
+            className="btn-odoo-secondary w-full sm:w-auto space-x-2 px-4 py-2.5 min-h-[42px] text-xs font-semibold"
           >
             <span>Read Original Article</span>
-            <ExternalLink className="w-3.5 h-3.5" />
+            <ExternalLink className="w-3.5 h-3.5 text-primary" />
           </a>
 
           <button
@@ -162,7 +162,7 @@ export const NewsDetailModal: React.FC<NewsDetailModalProps> = ({
               onClose();
               onAnalyze(story);
             }}
-            className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-5 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs transition-colors shadow-odoo-sm"
+            className="btn-odoo-primary w-full sm:w-auto space-x-2 px-5 py-2.5 min-h-[42px] text-xs font-semibold"
           >
             <Video className="w-4 h-4" />
             <span>Launch Video Forensic Analysis</span>

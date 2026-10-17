@@ -96,21 +96,21 @@ export const VideoPreview: React.FC<VideoPreviewProps> = ({
             type="button"
             disabled={disabled}
             onClick={onReplace}
-            className="p-2 rounded-lg bg-background-secondary border border-odoo-border text-odoo-muted hover:text-odoo-text hover:border-primary/40 text-xs transition-colors focus-visible:ring-2 focus-visible:ring-primary shadow-xs"
+            className="btn-odoo-icon w-9 h-9"
             title="Replace video"
             aria-label="Replace video"
           >
-            <RefreshCw className="w-3.5 h-3.5" />
+            <RefreshCw className="w-4 h-4" />
           </button>
           <button
             type="button"
             disabled={disabled}
             onClick={onRemove}
-            className="p-2 rounded-lg bg-background-secondary border border-odoo-border text-odoo-muted hover:text-forensic-error hover:border-red-300 text-xs transition-colors focus-visible:ring-2 focus-visible:ring-forensic-error shadow-xs"
+            className="btn-odoo-danger-icon w-9 h-9"
             title="Remove video"
             aria-label="Remove video"
           >
-            <Trash2 className="w-3.5 h-3.5" />
+            <Trash2 className="w-4 h-4" />
           </button>
         </div>
       </div>

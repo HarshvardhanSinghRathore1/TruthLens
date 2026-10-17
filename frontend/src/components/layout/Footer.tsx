@@ -14,17 +14,17 @@ export const Footer: React.FC = () => {
             <span className="font-semibold text-odoo-text">TruthLens AI</span>
           </div>
 
-          <div className="flex items-center space-x-5 text-xs font-medium">
-            <Link to="/radar" className="hover:text-primary transition-colors">
+          <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-semibold text-odoo-text">
+            <Link to="/radar" className="hover:text-primary transition-colors py-1">
               Deepfake Radar
             </Link>
-            <Link to="/how-it-works" className="hover:text-primary transition-colors">
+            <Link to="/how-it-works" className="hover:text-primary transition-colors py-1">
               How It Works
             </Link>
-            <Link to="/models" className="hover:text-primary transition-colors">
+            <Link to="/models" className="hover:text-primary transition-colors py-1">
               Model Specs
             </Link>
-            <Link to="/analyze" className="hover:text-primary transition-colors">
+            <Link to="/analyze" className="hover:text-primary transition-colors py-1">
               Analyze Media
             </Link>
           </div>

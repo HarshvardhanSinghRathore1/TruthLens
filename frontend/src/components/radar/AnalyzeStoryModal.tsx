@@ -90,7 +90,7 @@ export const AnalyzeStoryModal: React.FC<AnalyzeStoryModalProps> = ({ story, onC
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 rounded-lg bg-background-secondary border border-odoo-border text-odoo-muted hover:text-odoo-text transition-colors"
+            className="btn-odoo-icon w-9 h-9"
             aria-label="Close dialog"
           >
             <X className="w-5 h-5" />
@@ -131,7 +131,7 @@ export const AnalyzeStoryModal: React.FC<AnalyzeStoryModalProps> = ({ story, onC
           <button
             type="button"
             onClick={handleDirectUploadNavigate}
-            className="w-full inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs transition-colors shadow-odoo-sm"
+            className="btn-odoo-primary w-full space-x-2 px-4 py-2.5 min-h-[42px] text-xs font-semibold"
           >
             <Upload className="w-4 h-4" />
             <span>Open Media Scanner with Target Case</span>
@@ -157,7 +157,7 @@ export const AnalyzeStoryModal: React.FC<AnalyzeStoryModalProps> = ({ story, onC
                 onChange={(e) => setVideoUrl(e.target.value)}
                 placeholder="https://example.com/direct_sample.mp4"
                 disabled={isSubmitting}
-                className="w-full px-3.5 py-2 text-xs bg-white border border-odoo-border rounded-lg text-odoo-text placeholder-odoo-muted/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
+                className="w-full px-3.5 py-2.5 text-xs bg-white border border-odoo-border rounded-lg text-odoo-text placeholder-odoo-muted/60 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary disabled:opacity-50"
               />
             </div>
 
@@ -171,7 +171,7 @@ export const AnalyzeStoryModal: React.FC<AnalyzeStoryModalProps> = ({ story, onC
             <button
               type="submit"
               disabled={isSubmitting || !videoUrl.trim()}
-              className="w-full inline-flex items-center justify-center space-x-2 px-4 py-2 rounded-lg bg-white border border-odoo-border hover:bg-background-secondary text-odoo-text font-semibold text-xs transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-xs"
+              className="btn-odoo-secondary w-full space-x-2 px-4 py-2.5 min-h-[42px] text-xs font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? (
                 <>

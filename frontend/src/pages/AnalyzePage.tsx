@@ -59,11 +59,10 @@ export const AnalyzePage: React.FC = () => {
     } catch (err: any) {
       let msg =
         err?.message ||
-        'Could not complete forensic analysis. Ensure backend is running at VITE_API_BASE_URL.';
+        'Could not complete forensic analysis. Ensure backend is running and reachable.';
       if (typeof msg === 'string' && msg.toLowerCase().includes('timeout')) {
         msg = 'Analysis timed out. The server was busy processing high-resolution media. Please try again.';
       }
-        'Could not complete forensic analysis. Ensure backend is running and reachable.';
       setError(msg);
     } finally {
       setIsAnalyzing(false);
@@ -132,18 +131,18 @@ export const AnalyzePage: React.FC = () => {
           )}
 
           {/* Submission Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-4 pt-2">
             <div className="text-xs text-odoo-muted font-mono hidden sm:block">
               {selectedFile ? `Ready: ${selectedFile.name}` : 'Awaiting video input'}
             </div>
 
-            <div className="flex items-center space-x-3 w-full sm:w-auto">
+            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto">
               {selectedFile && (
                 <button
                   type="button"
                   onClick={handleClearFile}
                   disabled={isAnalyzing}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-odoo-border bg-white text-xs font-semibold text-odoo-muted hover:text-odoo-text hover:bg-background-secondary transition-colors focus-visible:ring-2 focus-visible:ring-primary shadow-xs"
+                  className="btn-odoo-secondary w-full sm:w-auto px-4 py-2.5 min-h-[42px] text-xs font-semibold"
                 >
                   Clear
                 </button>
@@ -153,11 +152,7 @@ export const AnalyzePage: React.FC = () => {
                 type="button"
                 disabled={!selectedFile || isAnalyzing || !consentAcknowledged}
                 onClick={handleStartAnalysis}
-                className={`w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary ${
-                  !selectedFile || isAnalyzing || !consentAcknowledged
-                    ? 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed'
-                    : 'bg-primary hover:bg-primary-hover text-white shadow-odoo-sm'
-                }`}
+                className="btn-odoo-primary w-full sm:w-auto space-x-2 px-6 py-2.5 min-h-[42px] text-xs font-bold disabled:bg-[#F2EFF6] disabled:border-[#E7E3EB] disabled:text-[#716D7A] disabled:opacity-70 disabled:cursor-not-allowed disabled:shadow-none"
               >
                 <ShieldCheck className="w-4 h-4" />
                 <span>Execute Deepfake Inspection</span>

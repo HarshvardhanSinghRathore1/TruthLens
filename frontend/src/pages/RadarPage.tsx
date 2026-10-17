@@ -143,8 +143,8 @@ export const RadarPage: React.FC = () => {
         </div>
 
         {/* Live Status & Refresh Button */}
-        <div className="flex items-center space-x-3 self-start md:self-auto">
-          <div className="flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-white border border-odoo-border text-xs font-mono text-odoo-muted shadow-xs">
+        <div className="flex flex-wrap items-center gap-3 self-start md:self-auto">
+          <div className="flex items-center space-x-1.5 px-3 py-1.5 min-h-[38px] rounded-lg bg-white border border-odoo-border text-xs font-mono text-odoo-muted shadow-xs">
             <Clock className="w-3.5 h-3.5 text-primary" />
             <span>Updated: {formatRelativeTime(lastRefreshed)}</span>
           </div>
@@ -153,7 +153,7 @@ export const RadarPage: React.FC = () => {
             type="button"
             onClick={handleManualRefresh}
             disabled={isRefreshing}
-            className="inline-flex items-center space-x-1.5 px-3.5 py-1.5 rounded-lg bg-white hover:bg-background-secondary border border-odoo-border text-odoo-text text-xs font-mono transition-all hover:border-primary/40 disabled:opacity-50 shadow-xs"
+            className="btn-odoo-secondary space-x-1.5 px-3.5 py-1.5 min-h-[38px] text-xs font-mono"
             title="Ingest latest wire stories"
           >
             <RefreshCw className={`w-3.5 h-3.5 ${isRefreshing ? 'animate-spin text-primary' : 'text-primary'}`} />
@@ -179,7 +179,8 @@ export const RadarPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-3 top-1/2 -translate-y-1/2 text-odoo-muted hover:text-odoo-text"
+                className="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full text-odoo-muted hover:text-primary hover:bg-primary-surface active:bg-primary-surface-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary transition-colors"
+                aria-label="Clear search query"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -219,10 +220,10 @@ export const RadarPage: React.FC = () => {
                 setSelectedCategory(cat);
                 setCurrentPage(1);
               }}
-              className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
+              className={`min-h-[34px] px-3.5 py-1.5 rounded-lg text-xs font-medium transition-colors shrink-0 ${
                 selectedCategory === cat
-                  ? 'bg-primary-surface text-primary border border-primary/30 font-bold shadow-xs'
-                  : 'bg-white text-odoo-muted border border-odoo-border hover:text-odoo-text hover:bg-background-secondary shadow-xs'
+                  ? 'btn-odoo-filter-active'
+                  : 'btn-odoo-filter'
               }`}
             >
               {cat}
@@ -243,10 +244,10 @@ export const RadarPage: React.FC = () => {
                 setSelectedStatus(st);
                 setCurrentPage(1);
               }}
-              className={`px-2.5 py-1 rounded-md text-[11px] font-mono transition-colors shrink-0 ${
+              className={`min-h-[32px] px-3 py-1 rounded-md text-[11px] font-mono transition-colors shrink-0 ${
                 selectedStatus === st
-                  ? 'bg-primary text-white font-bold shadow-xs'
-                  : 'bg-white text-odoo-muted border border-odoo-border hover:text-odoo-text hover:bg-background-secondary shadow-xs'
+                  ? 'btn-odoo-filter-active'
+                  : 'btn-odoo-filter'
               }`}
             >
               {st}
@@ -282,7 +283,7 @@ export const RadarPage: React.FC = () => {
           <button
             type="button"
             onClick={() => loadNews(true)}
-            className="px-3 py-1 rounded bg-red-100 hover:bg-red-200 text-forensic-error font-bold"
+            className="px-3.5 py-1.5 min-h-[34px] rounded-lg bg-red-100 hover:bg-red-200 active:bg-red-300 text-forensic-error font-bold text-xs focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-forensic-error transition-colors"
           >
             Retry
           </button>
@@ -343,7 +344,7 @@ export const RadarPage: React.FC = () => {
               setSelectedStatus('All');
               setCurrentPage(1);
             }}
-            className="px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs shadow-odoo-sm"
+            className="btn-odoo-primary px-4 py-2 min-h-[40px] text-xs font-semibold"
           >
             Reset All Filters
           </button>
@@ -357,13 +358,13 @@ export const RadarPage: React.FC = () => {
             type="button"
             onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
             disabled={currentPage <= 1}
-            className="p-2 rounded-lg bg-white border border-odoo-border text-odoo-muted hover:text-odoo-text disabled:opacity-30 disabled:cursor-not-allowed shadow-xs"
+            className="btn-odoo-icon w-9 h-9"
             aria-label="Previous page"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="px-4 py-1.5 rounded-lg bg-white border border-odoo-border text-xs font-mono text-odoo-text shadow-xs">
+          <span className="px-4 py-1.5 min-h-[36px] flex items-center justify-center rounded-lg bg-white border border-odoo-border text-xs font-mono text-odoo-text shadow-xs">
             {currentPage} / {totalPages}
           </span>
 
@@ -371,7 +372,7 @@ export const RadarPage: React.FC = () => {
             type="button"
             onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
             disabled={currentPage >= totalPages}
-            className="p-2 rounded-lg bg-white border border-odoo-border text-odoo-muted hover:text-odoo-text disabled:opacity-30 disabled:cursor-not-allowed shadow-xs"
+            className="btn-odoo-icon w-9 h-9"
             aria-label="Next page"
           >
             <ChevronRight className="w-4 h-4" />

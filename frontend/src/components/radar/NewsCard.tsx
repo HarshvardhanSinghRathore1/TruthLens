@@ -94,16 +94,16 @@ export const NewsCard: React.FC<NewsCardProps> = ({ story, onSelect, onAnalyze }
             href={story.source_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center space-x-1 px-2.5 py-1.5 rounded-md text-xs font-mono text-odoo-muted hover:text-primary hover:bg-background-secondary transition-colors"
+            className="inline-flex items-center space-x-1.5 px-3 py-1.5 min-h-[34px] rounded-lg text-xs font-medium text-odoo-text hover:text-primary hover:bg-primary-surface active:bg-primary-surface-active transition-colors border border-transparent hover:border-primary/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
           >
             <span>Read Article</span>
-            <ExternalLink className="w-3 h-3" />
+            <ExternalLink className="w-3 h-3 text-primary" />
           </a>
 
           <button
             type="button"
             onClick={() => onAnalyze(story)}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-md bg-primary-surface hover:bg-primary/10 text-primary border border-primary/20 hover:border-primary/40 text-xs font-semibold transition-all shadow-xs"
+            className="btn-odoo-soft space-x-1.5 px-3 py-1.5 min-h-[34px] text-xs font-semibold"
           >
             <Video className="w-3.5 h-3.5" />
             <span>Analyze Video</span>

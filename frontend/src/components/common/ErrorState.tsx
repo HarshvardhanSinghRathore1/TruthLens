@@ -25,12 +25,12 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         </div>
       </div>
 
-      <div className="flex items-center space-x-3 pt-2">
+      <div className="flex flex-wrap items-center gap-3 pt-2">
         {onRetry && (
           <button
             type="button"
             onClick={onRetry}
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-white border border-odoo-border hover:border-primary/40 text-xs font-semibold text-odoo-text transition-colors shadow-xs"
+            className="btn-odoo-secondary space-x-1.5 px-3.5 py-2 min-h-[38px] text-xs font-semibold"
           >
             <RefreshCw className="w-3.5 h-3.5 text-primary" />
             <span>Try Again</span>
@@ -39,9 +39,9 @@ export const ErrorState: React.FC<ErrorStateProps> = ({
         {showBackHome && (
           <Link
             to="/"
-            className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-lg bg-white border border-odoo-border hover:bg-background-secondary text-xs text-odoo-muted hover:text-odoo-text transition-colors shadow-xs"
+            className="btn-odoo-secondary space-x-1.5 px-3.5 py-2 min-h-[38px] text-xs font-semibold"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-3.5 h-3.5 text-primary" />
             <span>Back to Dashboard</span>
           </Link>
         )}

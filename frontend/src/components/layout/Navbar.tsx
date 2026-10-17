@@ -62,13 +62,13 @@ export const Navbar: React.FC = () => {
               <Link
                 key={link.path}
                 to={link.path}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary inline-flex items-center space-x-1.5 ${
+                className={`px-3.5 py-2 min-h-[36px] rounded-lg text-xs font-semibold transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary inline-flex items-center space-x-1.5 ${
                   isActive
-                    ? 'bg-primary-surface text-primary border border-primary/30 shadow-odoo-xs'
-                    : 'text-odoo-muted hover:text-odoo-text hover:bg-background-secondary'
+                    ? 'bg-primary-surface text-primary border border-primary/30 shadow-odoo-xs font-bold'
+                    : 'text-odoo-text/80 hover:text-primary hover:bg-primary-surface active:bg-primary-surface-active'
                 }`}
               >
-                {Icon && <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-primary' : 'text-odoo-muted'}`} />}
+                {Icon && <Icon className={`w-3.5 h-3.5 shrink-0 ${isActive ? 'text-primary' : 'text-odoo-muted group-hover:text-primary'}`} />}
                 <span>{link.name}</span>
               </Link>
             );
@@ -79,7 +79,7 @@ export const Navbar: React.FC = () => {
         <div className="flex items-center space-x-2 sm:space-x-3">
           {/* Backend Health Pill */}
           <div
-            className="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-background-secondary border border-odoo-border text-xs"
+            className="flex items-center space-x-1.5 px-2.5 py-1 min-h-[32px] rounded-full bg-background-secondary border border-odoo-border text-xs"
             title={`Backend server status: ${apiStatus}`}
           >
             <span
@@ -99,7 +99,7 @@ export const Navbar: React.FC = () => {
           {/* Primary Action Button (Odoo Purple) */}
           <Link
             to="/analyze"
-            className="hidden sm:inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs transition-colors shadow-odoo-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="btn-odoo-primary hidden sm:inline-flex space-x-1.5 px-4 py-2 min-h-[38px] text-xs font-semibold whitespace-nowrap"
           >
             <Video className="w-3.5 h-3.5" />
             <span>Scan Media</span>
@@ -111,7 +111,7 @@ export const Navbar: React.FC = () => {
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label={mobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
             aria-expanded={mobileMenuOpen}
-            className="md:hidden p-2 rounded-lg bg-background-secondary border border-odoo-border text-odoo-muted hover:text-odoo-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+            className="md:hidden w-10 h-10 flex items-center justify-center rounded-lg bg-white border border-odoo-border text-odoo-text hover:text-primary hover:bg-primary-surface hover:border-primary/40 active:bg-primary-surface-active focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary shadow-xs transition-colors"
           >
             {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
           </button>
@@ -129,10 +129,10 @@ export const Navbar: React.FC = () => {
                 <Link
                   key={link.path}
                   to={link.path}
-                  className={`px-3 py-2.5 rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-2.5 ${
+                  className={`px-3.5 py-2.5 min-h-[42px] rounded-lg text-sm font-medium transition-colors inline-flex items-center space-x-2.5 ${
                     isActive
-                      ? 'bg-primary-surface text-primary border border-primary/20'
-                      : 'text-odoo-muted hover:text-odoo-text hover:bg-background-secondary'
+                      ? 'bg-primary-surface text-primary border border-primary/30 font-bold'
+                      : 'text-odoo-text hover:text-primary hover:bg-primary-surface active:bg-primary-surface-active'
                   }`}
                 >
                   {Icon && <Icon className={`w-4 h-4 ${isActive ? 'text-primary' : 'text-odoo-muted'}`} />}
@@ -144,7 +144,7 @@ export const Navbar: React.FC = () => {
           <div className="pt-2 border-t border-odoo-border">
             <Link
               to="/analyze"
-              className="w-full inline-flex items-center justify-center space-x-2 px-4 py-2.5 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-xs shadow-odoo-sm"
+              className="btn-odoo-primary w-full space-x-2 px-4 py-2.5 min-h-[42px] text-xs font-semibold"
             >
               <Video className="w-4 h-4" />
               <span>Launch Media Scanner</span>

@@ -133,7 +133,7 @@ export const HowItWorksPage: React.FC = () => {
       <div className="text-center pt-4">
         <Link
           to="/analyze"
-          className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-primary hover:bg-primary-hover text-white font-semibold text-sm transition-colors shadow-odoo-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+          className="btn-odoo-primary space-x-2 px-6 py-3 min-h-[46px] text-sm font-semibold"
         >
           <Video className="w-4 h-4" />
           <span>Launch Scanner Terminal</span>
