@@ -12,6 +12,8 @@ def test_health_endpoint():
     assert "app_name" in data
     assert "version" in data
     assert "model_loaded" in data
+    assert "audio_model_loaded" in data
+    assert "audio_model_name" in data
 
 def test_root_endpoint():
     """Verify root endpoint responds with API metadata."""
