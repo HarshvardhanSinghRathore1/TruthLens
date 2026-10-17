@@ -1,25 +1,25 @@
 <!doctype html>
-<html lang="en" class="dark">
+<html lang="en" class="light">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#0B1020" />
+    <meta name="theme-color" content="#714B67" />
     <title>TruthLens AI — See Beyond the Fake</title>
-    <meta name="description" content="AI-powered digital media forensics platform for video deepfake detection." />
+    <meta name="description" content="Professional digital media forensics platform for video and audio deepfake detection." />
     <!-- Google Fonts Inter & JetBrains Mono -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
     <script>
       (function() {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-        try { localStorage.setItem('truthlens_theme', 'dark'); } catch (e) {}
+        document.documentElement.classList.remove('dark');
+        document.documentElement.classList.add('light');
+        try { localStorage.setItem('truthlens_theme', 'light'); } catch (e) {}
       })();
     </script>
   </head>
-  <body class="bg-background text-forensic-text min-h-screen selection:bg-accent-cyan/30 selection:text-accent-cyan antialiased font-sans">
+  <body class="bg-background-secondary text-forensic-text min-h-screen selection:bg-primary-surface selection:text-primary antialiased font-sans">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

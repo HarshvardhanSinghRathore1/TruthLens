@@ -58,8 +58,8 @@ export const ResultsPage: React.FC = () => {
   if (!analysis) {
     return (
       <div className="max-w-md mx-auto py-20 text-center space-y-4">
-        <RefreshCw className="w-8 h-8 text-accent-cyan animate-spin mx-auto" />
-        <p className="text-xs text-forensic-muted font-mono">Loading forensic dossier...</p>
+        <RefreshCw className="w-8 h-8 text-primary animate-spin mx-auto" />
+        <p className="text-xs text-odoo-muted font-mono">Loading forensic dossier...</p>
       </div>
     );
   }
@@ -67,41 +67,41 @@ export const ResultsPage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Action Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-forensic-border/70 pb-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-odoo-border pb-6">
         <div className="space-y-1">
           <Link
             to="/analyze"
-            className="inline-flex items-center space-x-1.5 text-xs text-forensic-muted hover:text-accent-cyan transition-colors"
+            className="inline-flex items-center space-x-1.5 text-xs text-odoo-muted hover:text-primary transition-colors font-medium"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Video Scanner</span>
           </Link>
-          <div className="flex items-center space-x-2">
-            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-forensic-text">
+          <div className="flex items-center space-x-3">
+            <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-odoo-text">
               Forensic Inspection Dossier
             </h1>
-            <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-accent-cyan/15 text-accent-cyan border border-accent-cyan/30">
+            <span className="text-[11px] font-mono px-2.5 py-0.5 rounded bg-primary-surface text-primary border border-primary/20 font-semibold">
               DUAL MODAL
             </span>
           </div>
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center space-x-3">
+        <div className="flex items-center space-x-2.5">
           <button
             type="button"
             onClick={handleDownloadReportJSON}
-            className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-background-card border border-forensic-border text-xs font-semibold text-forensic-text hover:bg-background-secondary hover:border-accent-cyan transition-colors focus-visible:ring-2 focus-visible:ring-accent-cyan"
+            className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white border border-odoo-border text-xs font-semibold text-odoo-text hover:bg-background-secondary hover:border-primary/40 transition-colors shadow-odoo-xs focus-visible:ring-2 focus-visible:ring-primary"
             title="Download JSON Evidence"
           >
-            <Download className="w-3.5 h-3.5 text-accent-cyan" />
+            <Download className="w-3.5 h-3.5 text-primary" />
             <span>Export JSON</span>
           </button>
 
           <button
             type="button"
             onClick={handlePrint}
-            className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-background-card border border-forensic-border text-xs font-semibold text-forensic-text hover:bg-background-secondary hover:border-accent-violet transition-colors focus-visible:ring-2 focus-visible:ring-accent-violet"
+            className="inline-flex items-center space-x-1.5 px-3 py-2 rounded-lg bg-white border border-odoo-border text-xs font-semibold text-odoo-text hover:bg-background-secondary transition-colors shadow-odoo-xs focus-visible:ring-2 focus-visible:ring-primary"
             title="Print Forensics Report"
           >
             <Printer className="w-3.5 h-3.5 text-accent-violet" />
@@ -110,7 +110,7 @@ export const ResultsPage: React.FC = () => {
 
           <Link
             to="/analyze"
-            className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-accent-cyan text-background text-xs font-bold hover:bg-accent-cyan/90 transition-all shadow-glow-cyan focus-visible:ring-2 focus-visible:ring-accent-cyan"
+            className="inline-flex items-center space-x-1.5 px-4 py-2 rounded-lg bg-primary hover:bg-primary-hover text-white text-xs font-semibold transition-colors shadow-odoo-sm focus-visible:ring-2 focus-visible:ring-primary"
           >
             <RefreshCw className="w-3.5 h-3.5" />
             <span>New Scan</span>
@@ -123,11 +123,11 @@ export const ResultsPage: React.FC = () => {
 
       {/* Multimodal Sections: Video vs Audio vs Consistency */}
       <div className="space-y-6">
-        <div className="flex items-center justify-between border-b border-forensic-border pb-2">
-          <h2 className="text-sm font-bold text-forensic-text uppercase tracking-wider font-mono">
+        <div className="flex items-center justify-between border-b border-odoo-border pb-2">
+          <h2 className="text-sm font-bold text-odoo-text uppercase tracking-wider font-mono">
             Multimodal Forensic Breakdown
           </h2>
-          <span className="text-xs text-forensic-muted font-mono">
+          <span className="text-xs text-odoo-muted font-mono">
             Video &bull; Audio &bull; Synchronization
           </span>
         </div>
@@ -166,9 +166,9 @@ export const ResultsPage: React.FC = () => {
       <div className="flex justify-center pt-4">
         <Link
           to="/analyze"
-          className="inline-flex items-center space-x-2 px-6 py-3 rounded-xl bg-background-card border border-forensic-border hover:border-accent-cyan text-xs font-bold text-forensic-text hover:shadow-glow-cyan transition-all"
+          className="inline-flex items-center space-x-2 px-6 py-3 rounded-lg bg-white border border-odoo-border hover:border-primary/40 text-xs font-semibold text-odoo-text hover:bg-background-secondary transition-all shadow-odoo-xs"
         >
-          <ArrowLeft className="w-4 h-4" />
+          <ArrowLeft className="w-4 h-4 text-primary" />
           <span>Upload Another Media File for Forensics</span>
         </Link>
       </div>

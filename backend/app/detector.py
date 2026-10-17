@@ -100,50 +100,39 @@ class DeepfakeDetector:
             return True
 
         try:
-            logger.info(f"Loading pretrained visual detector '{self.model_id}' on device '{self.device}'...")
+            logger.info(f"Loading pretrained model '{self.model_id}' on device '{self.device}'...")
+            from transformers import AutoImageProcessor, AutoModelForImageClassification
 
-            # 1. Locate checkpoint file (local override or Hugging Face Hub cache)
-            if self.weights_path and os.path.exists(self.weights_path):
-                ckpt_path = self.weights_path
-                logger.info(f"Using explicitly configured weights path: {ckpt_path}")
-            else:
-                ckpt_path = hf_hub_download(
-                    repo_id=self.model_id,
-                    filename=self.checkpoint_file
-                )
-                logger.info(f"Downloaded / resolved weights from Hugging Face Hub: {ckpt_path}")
+            # Check local files first to prevent unconfigured automatic large downloads
+            try:
+                self._processor = AutoImageProcessor.from_pretrained(self.model_id, local_files_only=True)
+                self._model = AutoModelForImageClassification.from_pretrained(self.model_id, local_files_only=True)
+            except Exception:
+                if getattr(settings, "AUTO_DOWNLOAD_MODELS", False):
+                    self._processor = AutoImageProcessor.from_pretrained(self.model_id)
+                    self._model = AutoModelForImageClassification.from_pretrained(self.model_id)
+                else:
+                    logger.warning(
+                        f"Pretrained model '{self.model_id}' weights not cached locally. "
+                        "Skipping automatic remote download (AUTO_DOWNLOAD_MODELS=False). "
+                        "The system will run in unassessed mode unless model weights are cached."
+                    )
+                    self._is_loaded = False
+                    return False
+            
+            # Verify class labels
+            id2label = getattr(self._model.config, "id2label", {0: "Real", 1: "Fake"})
+            logger.info(f"Model labels mapped: {id2label}")
+            
+            # Map the exact fake index
+            for idx, label in id2label.items():
+                if "fake" in str(label).lower() or "manipulat" in str(label).lower():
+                    self._fake_class_idx = int(idx)
+                elif "real" in str(label).lower() or "authentic" in str(label).lower():
+                    self._real_class_idx = int(idx)
 
-            self._checkpoint_path = ckpt_path
-
-            # 2. Load PyTorch checkpoint
-            checkpoint = torch.load(ckpt_path, map_location=self.device, weights_only=False)
-            if isinstance(checkpoint, dict) and "model_state_dict" in checkpoint:
-                state_dict = checkpoint["model_state_dict"]
-            elif isinstance(checkpoint, dict):
-                state_dict = checkpoint
-            else:
-                state_dict = checkpoint.state_dict()
-
-            # 3. Instantiate EfficientNet-B4 model architecture
-            model = EfficientNetB4DeepfakeModel(dropout=0.4)
-            load_result = model.load_state_dict(state_dict, strict=True)
-            logger.info(f"EfficientNet-B4 state dict loaded successfully: {load_result}")
-
-            # 4. Set to evaluation mode and transfer to target device
-            model.to(self.device)
-            model.eval()
-            self._model = model
-
-            # 5. Define standard ImageNet validation transforms (224x224 RGB)
-            self._transform = transforms.Compose([
-                transforms.Resize((224, 224)),
-                transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=[0.485, 0.456, 0.406],
-                    std=[0.229, 0.224, 0.225]
-                ),
-            ])
-
+            self._model.to(self.device)
+            self._model.eval()
             self._is_loaded = True
             logger.info(f"DeepfakeDetector initialized successfully ({self.model_name} from {self.model_id}).")
             return True

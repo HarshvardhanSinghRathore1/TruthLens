@@ -30,7 +30,7 @@ export const AnalyzePage: React.FC = () => {
   const handleCancelAnalysis = () => {
     setIsAnalyzing(false);
     setUploadProgress(0);
-    setError('Analysis cancelled by investigator.');
+    setError('Analysis cancelled by user.');
   };
 
   const handleStartAnalysis = async () => {
@@ -63,6 +63,7 @@ export const AnalyzePage: React.FC = () => {
       if (typeof msg === 'string' && msg.toLowerCase().includes('timeout')) {
         msg = 'Analysis timed out. The server was busy processing high-resolution media. Please try again.';
       }
+        'Could not complete forensic analysis. Ensure backend is running and reachable.';
       setError(msg);
     } finally {
       setIsAnalyzing(false);
@@ -72,17 +73,16 @@ export const AnalyzePage: React.FC = () => {
   return (
     <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10 space-y-8">
       {/* Page Title */}
-      <div className="space-y-1">
-        <div className="inline-flex items-center space-x-2 text-xs font-mono text-accent-cyan uppercase tracking-wider">
+      <div className="space-y-1.5">
+        <div className="inline-flex items-center space-x-2 text-xs font-medium text-primary uppercase tracking-wider">
           <Video className="w-3.5 h-3.5" />
           <span>Forensic Laboratory Terminal</span>
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight text-forensic-text">
+        <h1 className="text-2xl sm:text-3xl font-extrabold tracking-tight text-odoo-text">
           Video & Audio Deepfake Scanner
         </h1>
-        <p className="text-sm text-forensic-muted leading-relaxed max-w-2xl">
-          Upload video media to execute parallel facial boundary inspection, acoustic vocoder artifact analysis,
-          and cross-modal temporal consistency checks.
+        <p className="text-sm text-odoo-muted leading-relaxed max-w-2xl">
+          Upload media to execute parallel facial boundary inspection, acoustic vocoder artifact analysis, and cross-modal temporal consistency checks.
         </p>
       </div>
 
@@ -107,16 +107,16 @@ export const AnalyzePage: React.FC = () => {
           )}
 
           {/* Consent and Responsible Use Box */}
-          <div className="forensic-card p-4 space-y-2 border-forensic-border/70 bg-background-secondary/30">
+          <div className="forensic-card p-4 space-y-2 border-odoo-border bg-white shadow-odoo-xs">
             <label className="flex items-start space-x-3 cursor-pointer select-none">
               <input
                 type="checkbox"
                 checked={consentAcknowledged}
                 onChange={(e) => setConsentAcknowledged(e.target.checked)}
-                className="mt-1 rounded bg-background border-forensic-border text-accent-cyan focus:ring-accent-cyan shrink-0"
+                className="mt-1 rounded border-odoo-border text-primary focus:ring-primary shrink-0"
               />
-              <span className="text-xs text-forensic-muted leading-relaxed">
-                <strong className="text-forensic-text font-semibold">Responsible Use & Forensic Ethics:</strong> I confirm I have the right to analyze this media. I understand TruthLens AI provides probabilistic forensic assessment, not mathematical or legal proof of guilt or innocence.
+              <span className="text-xs text-odoo-muted leading-relaxed">
+                <strong className="text-odoo-text font-semibold">Responsible Use & Forensic Ethics:</strong> I confirm I have the right to analyze this media. I understand TruthLens AI provides probabilistic forensic assessment, not mathematical or legal proof of guilt or innocence.
               </span>
             </label>
           </div>
@@ -133,7 +133,7 @@ export const AnalyzePage: React.FC = () => {
 
           {/* Submission Bar */}
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-            <div className="text-xs text-forensic-muted font-mono hidden sm:block">
+            <div className="text-xs text-odoo-muted font-mono hidden sm:block">
               {selectedFile ? `Ready: ${selectedFile.name}` : 'Awaiting video input'}
             </div>
 
@@ -143,7 +143,7 @@ export const AnalyzePage: React.FC = () => {
                   type="button"
                   onClick={handleClearFile}
                   disabled={isAnalyzing}
-                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-forensic-border text-xs text-forensic-muted hover:text-forensic-text transition-colors focus-visible:ring-2 focus-visible:ring-accent-cyan"
+                  className="w-full sm:w-auto px-4 py-2.5 rounded-lg border border-odoo-border bg-white text-xs font-semibold text-odoo-muted hover:text-odoo-text hover:bg-background-secondary transition-colors focus-visible:ring-2 focus-visible:ring-primary shadow-xs"
                 >
                   Clear
                 </button>
@@ -153,10 +153,10 @@ export const AnalyzePage: React.FC = () => {
                 type="button"
                 disabled={!selectedFile || isAnalyzing || !consentAcknowledged}
                 onClick={handleStartAnalysis}
-                className={`w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-accent-cyan ${
+                className={`w-full sm:w-auto inline-flex items-center justify-center space-x-2 px-6 py-2.5 rounded-lg text-xs font-bold transition-all focus-visible:ring-2 focus-visible:ring-primary ${
                   !selectedFile || isAnalyzing || !consentAcknowledged
-                    ? 'bg-background-card border border-forensic-border text-forensic-muted cursor-not-allowed opacity-50'
-                    : 'bg-accent-cyan text-background hover:bg-accent-cyan/90 shadow-glow-cyan'
+                    ? 'bg-gray-100 border border-gray-200 text-gray-400 cursor-not-allowed'
+                    : 'bg-primary hover:bg-primary-hover text-white shadow-odoo-sm'
                 }`}
               >
                 <ShieldCheck className="w-4 h-4" />
