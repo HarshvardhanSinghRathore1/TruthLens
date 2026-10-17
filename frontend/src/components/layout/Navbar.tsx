@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShieldCheck, Video, Menu, X, Radio, Activity } from 'lucide-react';
+import { ShieldCheck, Video, Menu, X, Radio } from 'lucide-react';
 import { apiService } from '@/services/api';
 
 export const Navbar: React.FC = () => {

@@ -58,8 +58,20 @@ class AudioDeepfakeDetector:
             logger.info(f"Loading pretrained audio model '{self.model_id}' on device '{self.device}'...")
             from transformers import AutoFeatureExtractor, AutoModelForAudioClassification
 
-            self._processor = AutoFeatureExtractor.from_pretrained(self.model_id)
-            self._model = AutoModelForAudioClassification.from_pretrained(self.model_id)
+            try:
+                self._processor = AutoFeatureExtractor.from_pretrained(self.model_id, local_files_only=True)
+                self._model = AutoModelForAudioClassification.from_pretrained(self.model_id, local_files_only=True)
+            except Exception:
+                if not getattr(settings, "AUTO_DOWNLOAD_MODELS", False):
+                    logger.warning(
+                        f"Pretrained audio model '{self.model_id}' weights not cached locally. "
+                        f"Skipping automatic remote download (AUTO_DOWNLOAD_MODELS=False). "
+                        f"The system will run in unassessed mode for audio unless weights are cached."
+                    )
+                    self._is_loaded = False
+                    return False
+                self._processor = AutoFeatureExtractor.from_pretrained(self.model_id)
+                self._model = AutoModelForAudioClassification.from_pretrained(self.model_id)
 
             id2label = getattr(self._model.config, "id2label", {0: "real", 1: "fake"})
             logger.info(f"Audio model labels mapped: {id2label}")
