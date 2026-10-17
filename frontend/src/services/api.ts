@@ -11,7 +11,7 @@ const BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000/api
 
 export const apiClient: AxiosInstance = axios.create({
   baseURL: BASE_URL,
-  timeout: 120000, // 2 minutes for processing video
+  timeout: 600000, // 10 minutes for processing large/high-res video on CPU
 });
 
 apiClient.interceptors.response.use(

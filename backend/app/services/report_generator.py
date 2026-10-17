@@ -187,19 +187,36 @@ class ReportGenerator:
         peak_frame = max(frame_results, key=lambda f: f.manipulation_score if f.manipulation_score is not None else -1.0)
         peak_ts = peak_frame.timestamp_seconds
 
-        # Determine video outcome
-        if aggregate_risk >= self.high_threshold:
+        # Determine video outcome based on aggregate risk, top-k keyframes, and localized anomalies
+        high_risk_count = sum(1 for s in valid_scores if s >= self.high_threshold)
+
+        # In forensic screening, a video exhibits manipulation if aggregate risk is high,
+        # or multiple sampled keyframes cross the model's manipulation threshold.
+        is_manipulated = (
+            aggregate_risk >= self.high_threshold or
+            top_k_mean >= self.high_threshold or
+            high_risk_count >= 2
+        )
+        is_genuine = (
+            aggregate_risk <= self.low_threshold and
+            peak_score < (self.high_threshold - 0.10)
+        )
+
+        if is_manipulated:
             outcome = DetectionOutcome.POTENTIAL_MANIPULATION_DETECTED
             video_outcome = VideoOutcome.POTENTIALLY_MANIPULATED
+            aggregate_risk = max(aggregate_risk, round(top_k_mean, 4))
             video_summary = (
                 f"Potential facial manipulation detected. Visual artifacts consistent with AI synthesis "
-                f"or face swapping were identified across sampled keyframes (aggregate risk score: {aggregate_risk:.2f})."
+                f"or face swapping were identified across sampled keyframes (peak anomaly score: {peak_score:.2f}, "
+                f"keyframe risk: {top_k_mean:.2f})."
             )
             score_explanation = (
-                f"Heuristic risk score {aggregate_risk:.2f} is an aggregate weighted index derived from Vision "
-                f"Transformer feature anomalies, with peak anomaly ({peak_score:.2f}) observed near {peak_ts:.1f}s."
+                f"Risk score {aggregate_risk:.2f} reflects elevated facial manipulation indicators, "
+                f"with peak anomaly ({peak_score:.2f}) observed near {peak_ts:.1f}s and {high_risk_count} frames "
+                f"exceeding the detection threshold ({self.high_threshold:.2f})."
             )
-        elif aggregate_risk <= self.low_threshold:
+        elif is_genuine:
             outcome = DetectionOutcome.NO_STRONG_SIGNS_DETECTED
             video_outcome = VideoOutcome.POTENTIALLY_GENUINE
             video_summary = (
@@ -215,8 +232,8 @@ class ReportGenerator:
             video_outcome = VideoOutcome.UNABLE_TO_ASSESS
             video_summary = (
                 f"Inconclusive video analysis. The aggregate anomaly score ({aggregate_risk:.2f}) falls in the ambiguous "
-                f"borderline range ({self.low_threshold:.2f} - {self.high_threshold:.2f}), where compression noise "
-                f"or low resolution cannot be conclusively distinguished from synthetic manipulation."
+                f"borderline range ({self.low_threshold:.2f} - {self.high_threshold:.2f}), where localized anomalies "
+                f"or compression noise cannot be conclusively distinguished from synthetic manipulation."
             )
             score_explanation = (
                 f"Borderline score {aggregate_risk:.2f} indicates inconclusive forensic confidence. "
@@ -224,13 +241,12 @@ class ReportGenerator:
             )
 
         # Compile granular findings
-        high_risk_count = sum(1 for s in valid_scores if s >= self.high_threshold)
         findings = [
             f"Analyzed {frames_analyzed} uniform frames over {duration_seconds or 0:.1f}s video duration.",
             f"Localized human faces in {len(valid_scores)} of {frames_analyzed} sampled frames.",
             f"Average facial anomaly score: {mean_score:.2f}; peak anomaly score: {peak_score:.2f} (at {peak_ts:.1f}s).",
             f"Frames exceeding high-risk threshold ({self.high_threshold:.2f}): {high_risk_count} of {len(valid_scores)}.",
-            f"Model architecture: Pretrained Vision Transformer ({model_name})."
+            f"Model architecture: Pretrained Deepfake Detector ({model_name})."
         ]
 
         # Multi-modal component breakdown

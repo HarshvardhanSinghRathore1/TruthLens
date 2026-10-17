@@ -123,9 +123,9 @@ export const AnalysisProgress: React.FC<AnalysisProgressProps> = ({
         })}
       </div>
 
-      <div className="flex items-center justify-between pt-3 border-t border-odoo-border">
-        <p className="text-[11px] text-odoo-muted italic">
-          Dual video + audio analysis takes ~10–15 seconds. Please do not close this window.
+      <div className="flex items-center justify-between pt-3 border-t border-forensic-border">
+        <p className="text-[11px] text-forensic-muted italic">
+          Forensic inference runs locally on CPU/GPU. High-resolution media may take 30–60 seconds. Please do not close this window.
         </p>
         {onCancel && (
           <button
